@@ -3,16 +3,16 @@
   <channel>
     <title>Qimu&#39;s Code and Life</title>
     <description>郑淇木的代码及日常</description>
-    <link>http://zhengqm.github.iohttp://zhengqm.github.io//</link>
-    <atom:link href="http://zhengqm.github.iohttp://zhengqm.github.io//feed.xml" rel="self" type="application/rss+xml" />
+    <link>http://zhengqm.github.io/</link>
+    <atom:link href="http://zhengqm.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
         <title>博客搭建完成</title>
         <description>&lt;p&gt;仅以此博客督促自己多看书、多学习&lt;/p&gt;
 </description>
         <pubDate>Mon, 15 Jun 2015 00:00:00 +0800</pubDate>
-        <link>http://zhengqm.github.iohttp://zhengqm.github.io//life/2015/06/15/blog-setup/</link>
-        <guid isPermaLink="true">http://zhengqm.github.iohttp://zhengqm.github.io//life/2015/06/15/blog-setup/</guid>
+        <link>http://zhengqm.github.io/life/2015/06/15/blog-setup/</link>
+        <guid isPermaLink="true">http://zhengqm.github.io/life/2015/06/15/blog-setup/</guid>
       </item>
     
   </channel>
