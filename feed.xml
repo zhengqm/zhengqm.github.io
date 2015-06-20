@@ -18,7 +18,7 @@
 
 &lt;p&gt;我使用的redis源码版本是&lt;a href=&quot;http://download.redis.io/releases/redis-3.0.2.tar.gz&quot;&gt;redis 3.0.2&lt;/a&gt;。Redis的编译、运行出乎意料的简单。由于它将所有依赖项均以源码方式加入项目中，在代码根目录下一句简单的&lt;code&gt;make&lt;/code&gt;就可以完成所有编译任务，再来一句&lt;code&gt;make test&lt;/code&gt;就可以完成所有测试。从代码下载到完成测试，整个过程耗时竟然没有超过5分钟。&lt;/p&gt;
 
-&lt;p&gt;为了避免在茫茫代码中走神，我决定以实现一条简单命令的方式逐步阅读redis的代码。我打算实现的命令是&lt;code&gt;randget&lt;/code&gt;，它接受一个列表名作为参数，并随机返回列表中的一个元素。&lt;/p&gt;
+&lt;p&gt;为了避免在茫茫代码中走神，我决定以实现一条简单命令的方式逐步阅读redis的代码。我打算实现的命令是&lt;code&gt;randget&lt;/code&gt;，它接受一个列表名作为参数，并随机返回列表中的一个元素。这的确是一个实际用处不大的命令，但应该能帮助我们更有目的性的阅读代码。&lt;/p&gt;
 
 &lt;h2 id=&quot;in-action&quot;&gt;In Action&lt;/h2&gt;
 
@@ -67,7 +67,7 @@ Redis所支持的所有命令均存储于&lt;a href=&quot;https://github.com/ant
 127.0.0.1:6379&amp;gt; randget mylist
 [hang up]
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;可以看到redis能正确识别 &lt;code&gt;randget&lt;/code&gt; 应接收的参数个数。当参数个数正确时，redis识别了我们敲入的命令，但没有正确进行回应而且程序挂起了。&lt;/p&gt;
+&lt;p&gt;可以看到redis能正确识别 &lt;code&gt;randget&lt;/code&gt; 应接收的参数个数。当参数个数正确时，redis识别了我们敲入的命令，但由于我们还没有填入命令的实现，没有正确进行回应而且程序挂起了。&lt;/p&gt;
 
 &lt;p&gt;接下来就是在函数体中填入我们的实现了，命令需要接收一个列表名作为输入，并随机返回列表中的一个元素，抽象来说就是:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;randgetCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;redisClient&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
