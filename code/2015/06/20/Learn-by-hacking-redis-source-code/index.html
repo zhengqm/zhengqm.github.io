@@ -174,7 +174,7 @@ Redis所支持的所有命令均存储于<a href="https://github.com/antirez/red
 127.0.0.1:6379&gt; randget mylist
 [hang up]
 </code></pre></div>
-<p>可以看到redis能正确识别 <code>randget</code> 应接收的参数个数。当参数个数正确时，redis识别了我们敲入的命令，但由于我们还没有填入命令的实现，没有正确进行回应而且程序挂起了。</p>
+<p>可以看到redis能正确识别 <code>randget</code> 应接收的参数个数。当参数个数正确时，redis识别了我们敲入的命令，但由于我们还没有填入命令的实现，程序没有正确进行回应而且程序挂起了。</p>
 
 <p>接下来就是在函数体中填入我们的实现了，命令需要接收一个列表名作为输入，并随机返回列表中的一个元素，抽象来说就是:</p>
 <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">randgetCommand</span><span class="p">(</span><span class="n">redisClient</span> <span class="o">*</span><span class="n">c</span><span class="p">){</span>
