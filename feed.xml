@@ -8,9 +8,9 @@
     
       <item>
         <title>120行代码实现基于Meteor的即时搜索工具</title>
-        <description>&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+        <description>&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
-&lt;h3 id=&quot;1.-background&quot;&gt;1. Background&lt;/h3&gt;
+&lt;h3 id=&quot;background&quot;&gt;Background&lt;/h3&gt;
 
 &lt;p&gt;我所在的小组的研究领域是软件开发数据挖掘，在各种的软件开发数据中，最基础且最重要的数据是软件项目的代码库，其中包含了项目的所有代码文件、代码的所有版本、代码提交者的想关信息。我们小组从互联网的各大开源社区、代码托管网站爬取了超过20万个软件项目的代码库，其中既包含 Apache 、 Mozilla 这种大型社区中的项目，也包含托管于 Github 、 Bitbucket 等网站上的大大小小的项目。在此基础上，小组的师兄们对这些项目的元信息进行了抽取，并将其存储于 Mongodb 中，对于一个项目我们存储了项目的:&lt;/p&gt;
 
@@ -44,11 +44,11 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;然而尽管我们有了大量数据，也提取了这些数据的元信息，但是这些数据一直静静的躺在服务器的磁盘上，并没有被很好利用。其中一个重要的原因是我们缺少一个方便好用的搜索工具对数据进行探索。&lt;/p&gt;
 
-&lt;h3 id=&quot;2.-instant-search&quot;&gt;2. Instant Search&lt;/h3&gt;
+&lt;h3 id=&quot;instant-search&quot;&gt;Instant Search&lt;/h3&gt;
 
 &lt;p&gt;而所谓即时搜索(Instant search)，就是在使用者键入关键字的同时即时返回搜索结果，最为常见的例子自然是 &lt;a href=&quot;https://www.google.com/&quot;&gt;Google&lt;/a&gt; 和&lt;a href=&quot;https://www.baidu.com/&quot;&gt;百度&lt;/a&gt;了。&lt;/p&gt;
 
-&lt;h3 id=&quot;3.-goal&quot;&gt;3. Goal&lt;/h3&gt;
+&lt;h3 id=&quot;goal&quot;&gt;Goal&lt;/h3&gt;
 
 &lt;p&gt;今天我将要完成的目标是基于实验室存储于 Mongodb 的代码项目元数据，实现一个能够帮小组成员搜索数据的工具，它能够支持：&lt;/p&gt;
 
@@ -58,7 +58,9 @@
 &lt;li&gt;支持条件搜索&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;4.-meteor&quot;&gt;4. Meteor&lt;/h3&gt;
+&lt;h3 id=&quot;framework&quot;&gt;Framework&lt;/h3&gt;
+
+&lt;div style=&quot;text-align:center;margin-bottom:30px;&quot;&gt;&lt;img src =&quot;/images/meteor-logo.png&quot; /&gt;&lt;/div&gt;
 
 &lt;p&gt;引自&lt;a href=&quot;https://www.meteor.com/&quot;&gt;官网&lt;/a&gt;:&lt;/p&gt;
 
@@ -76,13 +78,11 @@ in pure JavaScript.&lt;/p&gt;
 
 &lt;p&gt;接下来我们开始基于 Meteor 实现上文介绍的即时搜索工具。&lt;/p&gt;
 
-&lt;h2 id=&quot;in-action&quot;&gt;In Action&lt;/h2&gt;
+&lt;h1 id=&quot;in-action&quot;&gt;In Action&lt;/h1&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/meteor-logo.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h3 id=&quot;back-end&quot;&gt;Back End&lt;/h3&gt;
 
-&lt;h3 id=&quot;1.-back-end&quot;&gt;1. Back End&lt;/h3&gt;
-
-&lt;p&gt;在后端中，我们首先获取 Mongodb 中存储元数据的 collection:&lt;/p&gt;
+&lt;p&gt;方便起见，我们将把客户端、服务器端的代码放在同一个 javascript 文件中。我们首先获取 Mongodb 中存储元数据的 collection:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;Items&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Mongo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Collection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;log_info&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;值得注意的是，这个对象既可在客户端代码中使用，也可在服务器端代码使用， Meteor 会基于 DDP 协议帮我们搞定数据在服务器、客户端之间的传输问题。&lt;/p&gt;
@@ -168,7 +168,7 @@ in pure JavaScript.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;至此，后端的所有功能已经全部完成。&lt;/p&gt;
 
-&lt;h3 id=&quot;2.-front-end&quot;&gt;2. Front End&lt;/h3&gt;
+&lt;h3 id=&quot;front-end&quot;&gt;Front End&lt;/h3&gt;
 
 &lt;p&gt;在前端中，我们需要一个模板对数据进行展示：&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;template&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;item&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
@@ -221,7 +221,7 @@ in pure JavaScript.&lt;/p&gt;
 
 &lt;p&gt;项目完整代码可见于 &lt;a href=&quot;https://github.com/zhengqm/SRSearch&quot;&gt;Github&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+&lt;h1 id=&quot;summary&quot;&gt;Summary&lt;/h1&gt;
 
 &lt;p&gt;今天我基于Meteor 框架，只用了120行代码实现了一个即时搜索工具的前端、后端，并支持正则、条件搜索功能。可以看到用 Meteor 开发实时应用是非常高效的。考虑到这个工具只使用了 Meteor 所提供特性中的冰山一角，Meteor 所能完成的事情着实令人期待。&lt;/p&gt;
 </description>
