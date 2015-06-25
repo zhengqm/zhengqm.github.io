@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta property="wb:webmaster" content="0cd97aa41a31b4c7" />
+    <title>120行代码实现基于Meteor的即时搜索工具 &#8211; Qimu's Code and Life</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="今天我使用 Meteor 搭建了一个简单的即时搜索工具，并将其部署在服务器上作为一个小小的实验室内部工具开始使用。">
+    <meta name="author" content="郑淇木 / Qimu Zheng">
+    <meta name="keywords" content="code">
+    <link rel="canonical" href="http://zhengqm.github.io/code/2015/06/26/instant-search-in-meteor/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css" type="text/css">
+
+    <!-- Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    
+
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="120行代码实现基于Meteor的即时搜索工具">
+    <meta property="og:description" content="郑淇木的代码及日常">
+    <meta property="og:url" content="http://zhengqm.github.io/code/2015/06/26/instant-search-in-meteor/">
+    <meta property="og:site_name" content="Qimu&#39;s Code and Life">
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+        
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-64116908-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+
+<body class="">
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://zhengqm.github.io" class="site-title">Qimu's Code and Life</a>
+      <nav class="site-nav right">
+        <a href="/about/">About</a>
+<a href="/contact/">Contact</a>
+
+      </nav>
+      <div class="clearfix"></div>
+      
+        <div class="social-icons">
+  <div class="left">
+    
+      <a class="fa fa-weibo" href="http://weibo.com/2172274364"></a>
+    
+    
+    
+    <a class="fa fa-rss" href="/feed.xml"></a>
+    
+    
+
+    
+    
+  </div>
+  <div class="right">
+    
+    
+    
+  </div>
+</div>
+<div class="clearfix"></div>
+
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>120行代码实现基于Meteor的即时搜索工具</h1>
+  <span class="post-meta">Jun 26, 2015</span><br>
+  
+  <span class="post-meta small">6 minute read</span>
+</div>
+
+<article class="post-content">
+  <p><img src="/images/meteor-logo.png" alt=""></p>
+
+<h2 id="introduction">Introduction</h2>
+
+<h3 id="1.-background">1. Background</h3>
+
+<p>我所在的小组的研究领域是软件开发数据挖掘，在各种的软件开发数据中，最基础且最重要的数据是软件项目的代码库，其中包含了项目的所有代码文件、代码的所有版本、代码提交者的想关信息。我们小组从互联网的各大开源社区、代码托管网站爬取了超过20万个软件项目的代码库，其中既包含 Apache 、 Mozilla 这种大型社区中的项目，也包含托管于 Github 、 Bitbucket 等网站上的大大小小的项目。在此基础上，小组的师兄们对这些项目的元信息进行了抽取，并将其存储于 Mongodb 中，对于一个项目我们存储了项目的:</p>
+
+<ul>
+<li>名称 (prj)</li>
+<li>所托管的网站 (repo)</li>
+<li>代码库所在位置 (src_loc)</li>
+<li>提交日志所在位置 (log_loc)</li>
+<li>提交人数 (n_peo)</li>
+<li>提交的版本数 (n_cmt)</li>
+<li>所使用的版本控制系统 (vcs)</li>
+<li>项目的起止时间 (b<em>time/e</em>time)</li>
+<li>时间跨度等信息 (span)</li>
+</ul>
+
+<p>以 Hadoop 为例， 它在 Mongodb中的一条记录为：</p>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span> 
+    <span class="nt">&quot;_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1430277742.791925&quot;</span><span class="p">,</span> 
+    <span class="nt">&quot;prj&quot;</span> <span class="p">:</span> <span class="s2">&quot;hadoop-common.git&quot;</span><span class="p">,</span>   
+    <span class="nt">&quot;repo&quot;</span> <span class="p">:</span> <span class="s2">&quot;git.apache.org&quot;</span><span class="p">,</span>    
+    <span class="nt">&quot;src_loc&quot;</span> <span class="p">:</span> <span class="s2">&quot;/path/to/datastore/git/git.apache.org_hadoop-common.git&quot;</span><span class="p">,</span> 
+    <span class="nt">&quot;log_loc&quot;</span> <span class="p">:</span> <span class="s2">&quot;/path/to/datastore/git/git.apache.org/hadoop-common.git&quot;</span><span class="p">,</span> 
+    <span class="nt">&quot;n_peo&quot;</span> <span class="p">:</span> <span class="mi">36</span><span class="p">,</span> 
+    <span class="nt">&quot;n_cmt&quot;</span> <span class="p">:</span> <span class="mi">5825</span><span class="err">，</span>
+    <span class="s2">&quot;vcs&quot;</span> <span class="p">:</span> <span class="s2">&quot;git&quot;</span>
+    <span class="s2">&quot;b_time&quot;</span> <span class="p">:</span> <span class="mi">200601</span><span class="p">,</span> 
+    <span class="nt">&quot;e_time&quot;</span> <span class="p">:</span> <span class="mi">201005</span><span class="p">,</span> 
+    <span class="nt">&quot;span&quot;</span> <span class="p">:</span> <span class="mi">52</span><span class="p">,</span>
+    <span class="nt">&quot;script&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> 
+<span class="p">}</span>
+</code></pre></div>
+<p>然而尽管我们有了大量数据，也提取了这些数据的元信息，但是这些数据一直静静的躺在服务器的磁盘上，并没有被很好利用。其中一个重要的原因是我们缺少一个方便好用的搜索工具对数据进行探索。</p>
+
+<h3 id="2.-instant-search">2. Instant Search</h3>
+
+<p>而所谓即时搜索(Instant search)，就是在使用者键入关键字的同时即时返回搜索结果，最为常见的例子自然是 <a href="https://www.google.com/">Google</a> 和<a href="https://www.baidu.com/">百度</a>了。</p>
+
+<h3 id="3.-goal">3. Goal</h3>
+
+<p>今天我将要完成的目标是基于实验室存储于 Mongodb 的代码项目元数据，实现一个能够帮小组成员搜索数据的工具，它能够支持：</p>
+
+<ul>
+<li>根据用户输入进行即时搜索</li>
+<li>支持关键字的正则匹配</li>
+<li>支持条件搜索</li>
+</ul>
+
+<h3 id="4.-meteor">4. Meteor</h3>
+
+<p>引自<a href="https://www.meteor.com/">官网</a>:</p>
+
+<blockquote>
+<p>Meteor is a complete open source platform
+for building web and mobile apps
+in pure JavaScript.</p>
+</blockquote>
+
+<p>引自<a href="http://36kr.com/p/99503.html">36Kr</a>:</p>
+
+<blockquote>
+<p>Meteor 是一个新鲜出炉的现代网站开发平台，基础构架是 Node.JS + MongoDB，它把这个基础构架同时延伸到了浏览器端，如果 App 用纯 JavaScript 写成，JS APIs 和 DB APIs 就可以同时在服务器端和客户端无差异地调用，本地和远程数据通过 DDP（Distributed Data Protocol）协议传输。</p>
+</blockquote>
+
+<p>接下来我们开始基于 Meteor 实现上文介绍的即时搜索工具。</p>
+
+<h2 id="in-action">In Action</h2>
+
+<h3 id="1.-back-end">1. Back End</h3>
+
+<p>在后端中，我们首先获取 Mongodb 中存储元数据的 collection:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">Items</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mongo</span><span class="p">.</span><span class="nx">Collection</span><span class="p">(</span><span class="s2">&quot;log_info&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>值得注意的是，这个对象既可在客户端代码中使用，也可在服务器端代码使用， Meteor 会基于 DDP 协议帮我们搞定数据在服务器、客户端之间的传输问题。</p>
+
+<p>在服务器端，我们根据用户提交的关键字对数据库进行查询，并发布 (publish) 与之相关的数据：</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">if</span> <span class="p">(</span><span class="nx">Meteor</span><span class="p">.</span><span class="nx">isServer</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">Meteor</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">queryString</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">query</span><span class="p">(</span><span class="nx">Items</span><span class="p">,</span> <span class="nx">queryString</span><span class="p">)</span> <span class="c1">// To implement later</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在客户端，当用户键入查询时，我们捕捉键盘输入事件，并将查询字符串存储于 Session 中，并根据查询字符串向服务器端订阅 (subscribe) 新数据：</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="nx">Template</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">events</span><span class="p">({</span>
+    <span class="s2">&quot;keyup #search-box&quot;</span><span class="o">:</span><span class="nx">_</span><span class="p">.</span><span class="nx">throttle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">){</span>
+      <span class="nx">Session</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;queryString&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
+      <span class="nx">Meteor</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
+    <span class="p">},</span> <span class="mi">50</span><span class="p">)</span>
+  <span class="p">})</span>
+</code></pre></div>
+<p>另外我们需要一个帮助函数对所得数据进行展示，这个函数将会在模板中被使用:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="nx">Template</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">helpers</span><span class="p">({</span>
+    <span class="nx">items</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">query</span><span class="p">(</span><span class="nx">Items</span><span class="p">,</span> <span class="nx">Session</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;queryString&#39;</span><span class="p">))</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+</code></pre></div>
+<p>最后我们来实现上面尚未实现的 <code>query</code> 函数，函数所完成的工作是:</p>
+
+<ul>
+<li>根据用户的输入构造查询数据库的条件</li>
+<li>对数据库进行查询</li>
+<li>返回查询结果</li>
+</ul>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">query</span><span class="p">(</span><span class="nx">collections</span><span class="p">,</span> <span class="nx">queryString</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">limit</span> <span class="o">=</span> <span class="mi">40</span>
+  <span class="kd">var</span> <span class="nx">query</span> <span class="o">=</span> <span class="nx">queryString</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+  <span class="kd">var</span> <span class="nx">andArray</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">query</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">query</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">continue</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">testSpecial</span>  <span class="o">=</span> <span class="nx">parseSpecial</span><span class="p">(</span><span class="nx">query</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">testSpecial</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">andArray</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">testSpecial</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">regEx</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">query</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="s1">&#39;ig&#39;</span><span class="p">)</span>
+      <span class="nx">andArray</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="nx">prj</span><span class="o">:</span> <span class="nx">regEx</span><span class="p">})</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">andArray</span><span class="p">.</span><span class="nx">length</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">collections</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">$and</span><span class="o">:</span> <span class="nx">andArray</span><span class="p">},</span> <span class="p">{</span><span class="nx">limit</span><span class="o">:</span><span class="nx">limit</span><span class="p">})</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">collections</span><span class="p">.</span><span class="nx">find</span><span class="p">({},{</span><span class="nx">limit</span><span class="o">:</span><span class="nx">limit</span><span class="p">})</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>而其中的 <code>parseSpecial</code> 函数实现了我们想提供的条件搜索功能，若包含特殊操作符，则构造搜索特殊搜索条件，否则使用对项目名称进行正则匹配：</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// should be DRYer</span>
+
+<span class="kd">function</span> <span class="nx">parseSpecial</span><span class="p">(</span><span class="nx">str</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">relation</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">)</span>
+    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">$lt</span><span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+    <span class="k">return</span> <span class="nx">result</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">)</span>
+    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">$gt</span><span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+    <span class="k">return</span> <span class="nx">result</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span>
+    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nx">result</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;ig&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">result</span>
+  <span class="p">}</span> 
+  <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>至此，后端的所有功能已经全部完成。</p>
+
+<h3 id="2.-front-end">2. Front End</h3>
+
+<p>在前端中，我们需要一个模板对数据进行展示：</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;template</span> <span class="na">name=</span><span class="s">&quot;item&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;dl</span> <span class="na">class=</span><span class="s">&quot;dl-horizontal&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;dt&gt;</span>Project<span class="nt">&lt;/dt&gt;</span>            <span class="nt">&lt;dd&gt;</span>{{prj}}<span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;dt&gt;</span>Repository<span class="nt">&lt;/dt&gt;</span>         <span class="nt">&lt;dd&gt;</span>{{repo}}<span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;dt&gt;</span>Time Span<span class="nt">&lt;/dt&gt;</span>          <span class="nt">&lt;dd&gt;</span>{{b_time}} - {{e_time}}<span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;dt&gt;</span>Version Control<span class="nt">&lt;/dt&gt;</span>    <span class="nt">&lt;dd&gt;</span>{{vcs}}<span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;dt&gt;</span># Commit<span class="nt">&lt;/dt&gt;</span>           <span class="nt">&lt;dd&gt;</span>{{n_cmt}}<span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;dt&gt;</span># People<span class="nt">&lt;/dt&gt;</span>           <span class="nt">&lt;dd&gt;</span>{{n_peo}}<span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;dt&gt;</span>Source Location<span class="nt">&lt;/dt&gt;</span>    <span class="nt">&lt;dd&gt;</span>{{src_loc}}<span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;dt&gt;</span>Log Location<span class="nt">&lt;/dt&gt;</span>       <span class="nt">&lt;dd&gt;</span>{{log_loc}}<span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;hr&gt;</span>
+    <span class="nt">&lt;/dl&gt;</span>
+<span class="nt">&lt;/template&gt;</span>
+</code></pre></div>
+<p>并且在 <code>body</code> 中使用这个模板：</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h1&gt;</span>Source Repo Search<span class="nt">&lt;/h1&gt;</span>
+      <span class="nt">&lt;form</span> <span class="na">class=</span><span class="s">&quot;form-horizontal&quot;</span> <span class="na">onsubmit=</span><span class="s">&quot;return false;&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;form-group&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;search-box&quot;</span> 
+        <span class="na">placeholder=</span><span class="s">&quot;Type project keyword to search&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/form&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&#39;help&#39;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;small&gt;</span>Possible options: repo | b_time | e_time | span | vcs | n_cmt | n_peo <span class="nt">&lt;/small&gt;&lt;br&gt;</span>
+        <span class="nt">&lt;small&gt;</span>Possible operators:  <span class="ni">&amp;gt;</span> | = | <span class="ni">&amp;lt;</span> | : <span class="nt">&lt;/small&gt;&lt;br&gt;</span>
+        <span class="nt">&lt;small&gt;</span>RegEx supported.<span class="nt">&lt;/small&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+
+      {{#each items}}
+        {{&gt; item}}
+      {{/each}}
+
+    <span class="nt">&lt;/div&gt;</span> 
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div>
+<p>可以看到 Meteor 所使用的模板语言是非常简单直接的。另外在 <code>head</code> 中我们需要 <code>bootstrap</code> 中的样式:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;title&gt;</span>SRSearch<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/css/bootstrap.min.css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/css/bootstrap-theme.min.css&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+</code></pre></div>
+<p>这样所有功能就完成了，所有代码（包括空行）不到120行，下面是最终效果：</p>
+
+<p><img src="/images/demo.gif" alt=""></p>
+
+<p>项目完整代码可见于 <a href="https://github.com/zhengqm/SRSearch">Github</a>。</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>今天我基于Meteor 框架，只用了120行代码实现了一个即时搜索工具的前端、后端，并支持正则、条件搜索功能。可以看到用 Meteor 开发实时应用是非常高效的。考虑到这个工具只使用了 Meteor 所提供特性中的冰山一角，Meteor 所能完成的事情着实令人期待。</p>
+
+</article>
+
+
+
+
+
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_shortname  = 'qimublog';
+    var disqus_identifier = '/code/2015/06/26/instant-search-in-meteor';
+
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+  <div class="p2 wrap">
+    <div class="measure mt1 center">
+      <small>
+        使用<a href="http://jekyllrb.com/">jekyll</a>和<a href="https://github.com/johnotander/pixyll">pixyll</a>搭建。
+      </small>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
