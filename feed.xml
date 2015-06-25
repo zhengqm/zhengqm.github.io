@@ -8,9 +8,7 @@
     
       <item>
         <title>120行代码实现基于Meteor的即时搜索工具</title>
-        <description>&lt;p&gt;&lt;img src=&quot;/images/meteor-logo.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+        <description>&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 
 &lt;h3 id=&quot;1.-background&quot;&gt;1. Background&lt;/h3&gt;
 
@@ -79,6 +77,8 @@ in pure JavaScript.&lt;/p&gt;
 &lt;p&gt;接下来我们开始基于 Meteor 实现上文介绍的即时搜索工具。&lt;/p&gt;
 
 &lt;h2 id=&quot;in-action&quot;&gt;In Action&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/meteor-logo.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;1.-back-end&quot;&gt;1. Back End&lt;/h3&gt;
 
