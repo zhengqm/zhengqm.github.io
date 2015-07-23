@@ -1,10 +1,152 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Qimu&#39;s Code and Life</title>
+    <title>Qimu&#39;s Code and Life | 郑淇木的代码及日常</title>
     <description>郑淇木的代码及日常</description>
     <link>http://zhengqm.github.io/</link>
     <atom:link href="http://zhengqm.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>90行python搭一个音乐搜索工具</title>
+        <description>&lt;p&gt;&lt;img src=&quot;/images/music.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;之前一段时间读到了&lt;a href=&quot;http://www.redcode.nl/blog/2010/06/creating-shazam-in-java/&quot;&gt;这篇博客&lt;/a&gt;，其中描述了作者如何用java实现国外著名音乐搜索工具&lt;a href=&quot;http://www.shazam.com/music/web/home.html&quot;&gt;shazam&lt;/a&gt;的基本功能。其中所提到的文章又将我引向了&lt;a href=&quot;http://www.ee.columbia.edu/%7Edpwe/papers/Wang03-shazam.pdf&quot;&gt;关于shazam的一篇论文&lt;/a&gt;及&lt;a href=&quot;https://laplacian.wordpress.com/2009/01/10/how-shazam-works/&quot;&gt;另外一篇博客&lt;/a&gt;。读完之后发现其中的原理并不十分复杂，但是方法对噪音的健壮性却非常好，出于好奇决定自己用python自己实现了一个简单的音乐搜索工具。&lt;/p&gt;
+
+&lt;h3 id=&quot;关于shazam&quot;&gt;关于shazam&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.shazam.com/music/web/home.html&quot;&gt;Shazam&lt;/a&gt;是国外的一个音乐搜索、匹配服务，用户可以向shazam提交一段音乐、歌曲片段，服务将返回该片段所对应的音乐、歌曲名称。&lt;/p&gt;
+
+&lt;h3 id=&quot;工具demo&quot;&gt;工具demo&lt;/h3&gt;
+
+&lt;p&gt;这个demo在ipython下展示工具的使用，项目名称为&lt;a href=&quot;&quot;&gt;Song Finder&lt;/a&gt;,其索引、搜索功能全部封装在&lt;code&gt;SFEngine&lt;/code&gt;中。首先是简单的准备工作：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;In&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;SFEngine&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;In&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;engine&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SFEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;在这之后我们对现有歌曲进行索引，我在&lt;code&gt;original&lt;/code&gt;目录下准备了几十首歌曲(.wav文件)作为曲库：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;In [3]: engine.index(&amp;#39;original&amp;#39;) # 索引该目录下的所有歌曲
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;在完成索引之后我们向&lt;code&gt;Song Finder&lt;/code&gt;提交一段有背景噪音的歌曲录音进行搜索。对于这段《枫》在1分15秒左右的录音：&lt;/p&gt;
+
+&lt;audio controls=&quot;controls&quot;&gt;
+  &lt;source src=&quot;/images/record0.wav&quot; type=&quot;audio/wav&quot; /&gt;
+&lt;/audio&gt;
+
+&lt;p&gt;工具的返回结果是：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;In&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;engine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;record/record0.wav&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;周杰伦&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;枫&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;73&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;周杰伦&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;枫&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;31&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;周杰伦&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;枫&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;周杰伦&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;枫&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;我要快樂&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;張惠妹&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;其中展示的分别是歌曲名称及片段在歌曲中出现的位置（以秒计），可以看到工具正确找回了歌曲的曲名，也找到了其在歌曲中的正确位置。&lt;/p&gt;
+
+&lt;p&gt;而对于这段《童话》在1分05秒左右的背景噪音更加嘈杂的录音：&lt;/p&gt;
+
+&lt;audio controls=&quot;controls&quot;&gt;
+  &lt;source src=&quot;/images/record8.wav&quot; type=&quot;audio/wav&quot; /&gt;
+&lt;/audio&gt;
+
+&lt;p&gt;工具的返回结果是：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;In&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;engine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;record/record8.wav&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;光良&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;童话&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;67&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;光良&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;童话&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;39&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;光良&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;童话&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;33&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;光良&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;童话&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;135&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;original&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;光良&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;童话&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;69&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;可以看到尽管噪音非常嘈杂，但是工具仍然能成功识别所对应的歌曲并对应到歌曲的正确位置，说明工具在噪音较大的环境下有良好的健壮性！&lt;/p&gt;
+
+&lt;p&gt;项目主页： &lt;a href=&quot;https://github.com/zhengqm/SongFinder&quot;&gt;Github&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;工具原理&quot;&gt;工具原理&lt;/h3&gt;
+
+&lt;p&gt;给定曲库对一个录音片段进行检索是一个不折不扣的搜索问题，但是对音频的搜索并不像对文档、数据的搜索那么直接。为了完成对音乐的搜索，工具需要完成下列3个任务：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;对曲库中的所有歌曲抽取特征&lt;/li&gt;
+&lt;li&gt;以相同的方式对录音片段提取特征&lt;/li&gt;
+&lt;li&gt;根据录音片段的特征对曲库进行搜索，返回最相似的歌曲及其在歌曲中的位置&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;特征提取？离散傅立叶变换！&quot;&gt;特征提取？离散傅立叶变换！&lt;/h3&gt;
+
+&lt;p&gt;为了对音乐（音频）提取特征，一个很直接的想法是得到音乐的音高的信息，而音高在物理上对应的则又是波的频率信息。为了获取这类信息，一个非常直接的额做法是使用离散傅叶变化对声音进行分析，即使用一个滑动窗口对声音进行采样，对窗口内的数据进行离散傅立叶变化，将时间域上的信息变换为频率域上的信息，使用&lt;code&gt;scipy&lt;/code&gt;的接口可以很轻松的完成。在这之后我们将频率分段，提取每频率中振幅最大的频率：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;extract_feature&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scaled&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scaled&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;  
+    &lt;span class=&quot;n&quot;&gt;normalized&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;abs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;feature&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;normalized&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; \
+                &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;normalized&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; \
+                &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;normalized&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; \
+                &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;normalized&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; \
+                &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;normalized&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; \
+                &lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;normalized&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;feature&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这样，对于一个滑动窗口，我提取到了6个频率作为其特征。对于整段音频，我们重复调用这个函数进行特征抽取：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start_second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;duration&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start_second&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;44100&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;duration&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1e15&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;44100&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;duration&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8192&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scaled&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_and_scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scaled&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;feature&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract_feature&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scaled&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;feature&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;其中44100为音频文件自身的采样频率，8192是我设定的取样窗口（对，这样hardcode是很不对的），&lt;code&gt;callback&lt;/code&gt;是一个传入的函数，需要这个参数是因为在不同场景下对于所得到的特征会有不同的后续操作。&lt;/p&gt;
+
+&lt;h3 id=&quot;匹配曲库&quot;&gt;匹配曲库&lt;/h3&gt;
+
+&lt;p&gt;在得到歌曲、录音的大量特征后，如何进行高效搜索是一个问题。一个有效的做法是建立一个特殊的哈希表，其中的key是频率，其对应的value是一系列&lt;code&gt;(曲名,时间)&lt;/code&gt;的tuple，其记录的是某一歌曲在某一时间出现了某一特征频率，但是以频率为key而非以曲名或时间为key。&lt;/p&gt;
+
+&lt;p&gt;表格。。&lt;/p&gt;
+
+&lt;p&gt;这样做的好处是，当在录音中提取到某一个特征频率时，我们可以从这个哈希表中找出与该特征频率相关的歌曲及时间！&lt;/p&gt;
+
+&lt;p&gt;当然有了这个哈希表还不够用，我们不可能把所有与特征频率相关的歌曲都抽出来，看看谁命中的次数多，因为这样会完全无视歌曲的时序信息，并引入一些错误的匹配。&lt;/p&gt;
+
+&lt;p&gt;我们的做法是，对于录音中在&lt;code&gt;t&lt;/code&gt;时间点的一个特征频率&lt;code&gt;f&lt;/code&gt;，从曲库找出所有与&lt;code&gt;f&lt;/code&gt;相关的&lt;code&gt;(曲名,时间)&lt;/code&gt; tuple，例如我们得到了 &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[(s1, t1), (s2, t2), (s3, t3)]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;我们使用时间进行对齐，得到这个列表 &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[(s1, t1-t), (s2, t2-t), (s3, t3-t)]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;记为&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[(s1, t1`), (s2, t2`), (s3, t3`)]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;我们对所有时间点的所有特征频率均做上述操作，得到了一个大列表：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[(s1, t1`), (s2, t2`), (s3, t3`), ..., (sn, tn`)]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;对这个列表进行计数，可以看到哪首歌曲的哪个时间点命中的次数最多，并将命中次数最多的&lt;code&gt;(曲名，时间)&lt;/code&gt;对返回给用户。&lt;/p&gt;
+
+&lt;h3 id=&quot;不足&quot;&gt;不足&lt;/h3&gt;
+
+&lt;p&gt;这个小工具是一个几个小时写成的hack，有许都地方需要改进，例如：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;目前只支持了wav格式的曲库及录音&lt;/li&gt;
+&lt;li&gt;所有数据都放在内存中，曲库体积增大时需要引入更好的后端存储&lt;/li&gt;
+&lt;li&gt;索引应该并行化，匹配也应该并行化，匹配的模型其实是典型的map-reduce。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;项目主页&quot;&gt;项目主页&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/zhengqm/SongFinder&quot;&gt;Github&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Thu, 23 Jul 2015 00:00:00 +0800</pubDate>
+        <link>http://zhengqm.github.io/code/2015/07/23/write-you-a-song-finder/</link>
+        <guid isPermaLink="true">http://zhengqm.github.io/code/2015/07/23/write-you-a-song-finder/</guid>
+      </item>
     
       <item>
         <title>120行代码实现基于Meteor的即时搜索工具</title>
