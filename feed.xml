@@ -18,7 +18,7 @@
 
 &lt;h3 id=&quot;工具demo&quot;&gt;工具demo&lt;/h3&gt;
 
-&lt;p&gt;这个demo在ipython下展示工具的使用，项目名称为&lt;a href=&quot;&quot;&gt;Song Finder&lt;/a&gt;,其索引、搜索功能全部封装在&lt;code&gt;SFEngine&lt;/code&gt;中。首先是简单的准备工作：&lt;/p&gt;
+&lt;p&gt;这个demo在ipython下展示工具的使用，项目名称为&lt;a href=&quot;https://github.com/zhengqm/SongFinder&quot;&gt;Song Finder&lt;/a&gt;,其索引、搜索功能全部封装在&lt;code&gt;SFEngine&lt;/code&gt;中。首先是简单的准备工作：&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;In&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;SFEngine&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;In&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;engine&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SFEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
