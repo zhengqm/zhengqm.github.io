@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta property="wb:webmaster" content="0cd97aa41a31b4c7" />
-    <title>90行python搭一个音乐搜索工具 &#8211; Qimu's Code and Life | 郑淇木的代码及日常</title>
+    <title>90行python搭一个音乐搜索工具 —— Song Finder &#8211; Qimu's Code and Life | 郑淇木的代码及日常</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="这两天基于python及scipy搭建了一个简单的音乐（音频）搜索工具，能够根据音乐片段对曲库进行检索，并在嘈杂环境中经受住了考验。">
     <meta name="author" content="郑淇木 / Qimu Zheng">
@@ -26,7 +26,7 @@
     <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="90行python搭一个音乐搜索工具">
+    <meta property="og:title" content="90行python搭一个音乐搜索工具 —— Song Finder">
     <meta property="og:description" content="郑淇木的代码及日常">
     <meta property="og:url" content="http://zhengqm.github.io/code/2015/07/23/write-you-a-song-finder/">
     <meta property="og:site_name" content="Qimu&#39;s Code and Life | 郑淇木的代码及日常">
@@ -108,7 +108,7 @@
 
 
 <div class="post-header mb2">
-  <h1>90行python搭一个音乐搜索工具</h1>
+  <h1>90行python搭一个音乐搜索工具 —— Song Finder</h1>
   <span class="post-meta">Jul 23, 2015</span><br>
   
   <span class="post-meta small">3 minute read</span>
@@ -117,15 +117,11 @@
 <article class="post-content">
   <p><img src="/images/music.jpg" alt=""></p>
 
-<p>之前一段时间读到了<a href="http://www.redcode.nl/blog/2010/06/creating-shazam-in-java/">这篇博客</a>，其中描述了作者如何用java实现国外著名音乐搜索工具<a href="http://www.shazam.com/music/web/home.html">shazam</a>的基本功能。其中所提到的文章又将我引向了<a href="http://www.ee.columbia.edu/%7Edpwe/papers/Wang03-shazam.pdf">关于shazam的一篇论文</a>及<a href="https://laplacian.wordpress.com/2009/01/10/how-shazam-works/">另外一篇博客</a>。读完之后发现其中的原理并不十分复杂，但是方法对噪音的健壮性却非常好，出于好奇决定自己用python自己实现了一个简单的音乐搜索工具。</p>
-
-<h3 id="关于shazam">关于shazam</h3>
-
-<p><a href="http://www.shazam.com/music/web/home.html">Shazam</a>是国外的一个音乐搜索、匹配服务，用户可以向shazam提交一段音乐、歌曲片段，服务将返回该片段所对应的音乐、歌曲名称。</p>
+<p>之前一段时间读到了<a href="http://www.redcode.nl/blog/2010/06/creating-shazam-in-java/">这篇博客</a>，其中描述了作者如何用java实现国外著名音乐搜索工具<a href="http://www.shazam.com/music/web/home.html">shazam</a>的基本功能。其中所提到的文章又将我引向了<a href="http://www.ee.columbia.edu/%7Edpwe/papers/Wang03-shazam.pdf">关于shazam的一篇论文</a>及<a href="https://laplacian.wordpress.com/2009/01/10/how-shazam-works/">另外一篇博客</a>。读完之后发现其中的原理并不十分复杂，但是方法对噪音的健壮性却非常好，出于好奇决定自己用python自己实现了一个简单的音乐搜索工具—— Song Finder, 它的核心功能被封装在 <code>SFEngine</code> 中，第三方依赖方面只使用到了 <code>scipy</code>。</p>
 
 <h3 id="工具demo">工具demo</h3>
 
-<p>这个demo在ipython下展示工具的使用，项目名称为<a href="https://github.com/zhengqm/SongFinder">Song Finder</a>,其索引、搜索功能全部封装在<code>SFEngine</code>中。首先是简单的准备工作：</p>
+<p>这个demo在ipython下展示工具的使用，本项目名称为<a href="https://github.com/zhengqm/SongFinder">Song Finder</a>,我把索引、搜索的功能全部封装在<a href="https://github.com/zhengqm/SongFinder">Song Finder</a>中的<code>SFEngine</code>中。首先是简单的准备工作：</p>
 <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">SFEngine</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">SFEngine</span><span class="p">()</span>
@@ -167,7 +163,7 @@
 
 <p>项目主页： <a href="https://github.com/zhengqm/SongFinder">Github</a></p>
 
-<h3 id="工具原理">工具原理</h3>
+<h3 id="song-finder原理">Song Finder原理</h3>
 
 <p>给定曲库对一个录音片段进行检索是一个不折不扣的搜索问题，但是对音频的搜索并不像对文档、数据的搜索那么直接。为了完成对音乐的搜索，工具需要完成下列3个任务：</p>
 

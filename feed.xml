@@ -7,18 +7,14 @@
     <atom:link href="http://zhengqm.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
-        <title>90行python搭一个音乐搜索工具</title>
+        <title>90行python搭一个音乐搜索工具 —— Song Finder</title>
         <description>&lt;p&gt;&lt;img src=&quot;/images/music.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 
-&lt;p&gt;之前一段时间读到了&lt;a href=&quot;http://www.redcode.nl/blog/2010/06/creating-shazam-in-java/&quot;&gt;这篇博客&lt;/a&gt;，其中描述了作者如何用java实现国外著名音乐搜索工具&lt;a href=&quot;http://www.shazam.com/music/web/home.html&quot;&gt;shazam&lt;/a&gt;的基本功能。其中所提到的文章又将我引向了&lt;a href=&quot;http://www.ee.columbia.edu/%7Edpwe/papers/Wang03-shazam.pdf&quot;&gt;关于shazam的一篇论文&lt;/a&gt;及&lt;a href=&quot;https://laplacian.wordpress.com/2009/01/10/how-shazam-works/&quot;&gt;另外一篇博客&lt;/a&gt;。读完之后发现其中的原理并不十分复杂，但是方法对噪音的健壮性却非常好，出于好奇决定自己用python自己实现了一个简单的音乐搜索工具。&lt;/p&gt;
-
-&lt;h3 id=&quot;关于shazam&quot;&gt;关于shazam&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.shazam.com/music/web/home.html&quot;&gt;Shazam&lt;/a&gt;是国外的一个音乐搜索、匹配服务，用户可以向shazam提交一段音乐、歌曲片段，服务将返回该片段所对应的音乐、歌曲名称。&lt;/p&gt;
+&lt;p&gt;之前一段时间读到了&lt;a href=&quot;http://www.redcode.nl/blog/2010/06/creating-shazam-in-java/&quot;&gt;这篇博客&lt;/a&gt;，其中描述了作者如何用java实现国外著名音乐搜索工具&lt;a href=&quot;http://www.shazam.com/music/web/home.html&quot;&gt;shazam&lt;/a&gt;的基本功能。其中所提到的文章又将我引向了&lt;a href=&quot;http://www.ee.columbia.edu/%7Edpwe/papers/Wang03-shazam.pdf&quot;&gt;关于shazam的一篇论文&lt;/a&gt;及&lt;a href=&quot;https://laplacian.wordpress.com/2009/01/10/how-shazam-works/&quot;&gt;另外一篇博客&lt;/a&gt;。读完之后发现其中的原理并不十分复杂，但是方法对噪音的健壮性却非常好，出于好奇决定自己用python自己实现了一个简单的音乐搜索工具—— Song Finder, 它的核心功能被封装在 &lt;code&gt;SFEngine&lt;/code&gt; 中，第三方依赖方面只使用到了 &lt;code&gt;scipy&lt;/code&gt;。&lt;/p&gt;
 
 &lt;h3 id=&quot;工具demo&quot;&gt;工具demo&lt;/h3&gt;
 
-&lt;p&gt;这个demo在ipython下展示工具的使用，项目名称为&lt;a href=&quot;https://github.com/zhengqm/SongFinder&quot;&gt;Song Finder&lt;/a&gt;,其索引、搜索功能全部封装在&lt;code&gt;SFEngine&lt;/code&gt;中。首先是简单的准备工作：&lt;/p&gt;
+&lt;p&gt;这个demo在ipython下展示工具的使用，本项目名称为&lt;a href=&quot;https://github.com/zhengqm/SongFinder&quot;&gt;Song Finder&lt;/a&gt;,我把索引、搜索的功能全部封装在&lt;a href=&quot;https://github.com/zhengqm/SongFinder&quot;&gt;Song Finder&lt;/a&gt;中的&lt;code&gt;SFEngine&lt;/code&gt;中。首先是简单的准备工作：&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;In&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;SFEngine&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;In&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;engine&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SFEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
@@ -60,7 +56,7 @@
 
 &lt;p&gt;项目主页： &lt;a href=&quot;https://github.com/zhengqm/SongFinder&quot;&gt;Github&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;工具原理&quot;&gt;工具原理&lt;/h3&gt;
+&lt;h3 id=&quot;song-finder原理&quot;&gt;Song Finder原理&lt;/h3&gt;
 
 &lt;p&gt;给定曲库对一个录音片段进行检索是一个不折不扣的搜索问题，但是对音频的搜索并不像对文档、数据的搜索那么直接。为了完成对音乐的搜索，工具需要完成下列3个任务：&lt;/p&gt;
 
