@@ -2,9 +2,34 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Qimu&#39;s Code and Life | 郑淇木的代码及日常</title>
-    <description>郑淇木的代码及日常</description>
+    <description>郑淇木的博客  Qimu Zheng&#39;s Blog</description>
     <link>http://zhengqm.github.io/</link>
     <atom:link href="http://zhengqm.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>Amazon 碎碎念</title>
+        <description>&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
+
+&lt;p&gt;本学期选修的一门数据库课程的大作业是需要在Hadoop上使用mapreduce框架实现多个Join算法。代码编写完毕后有感于无处进行真机实验，遂将目光投向云服务提供商。欣喜地发现Amazon的Elastic MapReduce服务能够满足我的需求，遂计划将代码迁移至EMR运行。&lt;/p&gt;
+
+&lt;h2 id=&quot;正题&quot;&gt;正题&lt;/h2&gt;
+
+&lt;p&gt;然后现实太过曲折，不得不在此记(tu)录(cao)一下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;从 &lt;code&gt;s3://*&lt;/code&gt; 或者 &lt;code&gt;s3n://&lt;/code&gt; 读不出文件不要太勉强，对说的就是&lt;code&gt;Wrong FS: s3n://&lt;/code&gt;把文件搬到hdfs上也不是不可以&amp;hellip;&lt;/li&gt;
+&lt;li&gt;搬文件需要ssh到master节点上，页面也给出了清晰的ssh密钥使用教程，然而，ec2的ssh权限默认是不开的&amp;hellip;&lt;/li&gt;
+&lt;li&gt;遇到OutOfMemoryError的时候，除了花大量时间改配置外，还可以换一个内存大一些的集群，反正那么短的小时数也不贵&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;最后&quot;&gt;最后&lt;/h2&gt;
+
+&lt;p&gt;以上3点每点均耗费了将近两个小时解决，作业deadline前尝试完全没用过的产品真是非常非常作死&amp;hellip;&lt;/p&gt;
+</description>
+        <pubDate>Mon, 18 Jan 2016 00:00:00 +0800</pubDate>
+        <link>http://zhengqm.github.io/code/2016/01/18/amazon/</link>
+        <guid isPermaLink="true">http://zhengqm.github.io/code/2016/01/18/amazon/</guid>
+      </item>
     
       <item>
         <title>90行python搭一个音乐搜索工具 —— Song Finder</title>

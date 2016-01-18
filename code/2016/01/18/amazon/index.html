@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta property="wb:webmaster" content="0cd97aa41a31b4c7" />
-    <title>Qimu's Code and Life | 郑淇木的代码及日常</title>
+    <title>Amazon 碎碎念 &#8211; Qimu's Code and Life | 郑淇木的代码及日常</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="郑淇木的博客  Qimu Zheng&#39;s Blog">
+    <meta name="description" content="这是一篇在亚马逊Elastic MapReduce上完成作业后的小小记(tu)录(cao)。">
     <meta name="author" content="郑淇木">
     <meta name="keywords" content="郑淇木 博客  Qimu Zheng">
-    
-    <link rel="canonical" href="http://zhengqm.github.io/404.html">
+    <!--meta name="keywords" content="code"-->
+    <link rel="canonical" href="http://zhengqm.github.io/code/2016/01/18/amazon/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/pixyll.css" type="text/css">
@@ -27,9 +27,9 @@
     <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Qimu&#39;s Code and Life | 郑淇木的代码及日常">
+    <meta property="og:title" content="Amazon 碎碎念">
     <meta property="og:description" content="郑淇木的博客  Qimu Zheng&#39;s Blog">
-    <meta property="og:url" content="http://zhengqm.github.io/404.html">
+    <meta property="og:url" content="http://zhengqm.github.io/code/2016/01/18/amazon/">
     <meta property="og:site_name" content="Qimu&#39;s Code and Life | 郑淇木的代码及日常">
 
     <!-- Icons -->
@@ -62,8 +62,8 @@
     
 </head>
 
-<body>
-  <div class="site-wrap center">
+<body class="">
+  <div class="site-wrap">
     <header class="site-header px2 px-responsive">
   <div class="mt2 wrap">
     <div class="measure">
@@ -111,14 +111,60 @@
 
     <div class="post p2 p-responsive wrap" role="main">
       <div class="measure">
-        <h1 id="404">404</h1>
+        
 
-<p>Oops! Nothing here&hellip;</p>
 
-<div class="mt3">
-  <a href="/" class="button button-blue">Home</a>
-  <a href="/contact/" class="button button-blue">Contact</a>
+
+
+<div class="post-header mb2">
+  <h1>Amazon 碎碎念</h1>
+  <span class="post-meta">Jan 18, 2016</span><br>
+  
+  <span class="post-meta small">1 minute read</span>
 </div>
+
+<article class="post-content">
+  <h2 id="起因">起因</h2>
+
+<p>本学期选修的一门数据库课程的大作业是需要在Hadoop上使用mapreduce框架实现多个Join算法。代码编写完毕后有感于无处进行真机实验，遂将目光投向云服务提供商。欣喜地发现Amazon的Elastic MapReduce服务能够满足我的需求，遂计划将代码迁移至EMR运行。</p>
+
+<h2 id="正题">正题</h2>
+
+<p>然后现实太过曲折，不得不在此记(tu)录(cao)一下：</p>
+
+<ul>
+<li>从 <code>s3://*</code> 或者 <code>s3n://</code> 读不出文件不要太勉强，对说的就是<code>Wrong FS: s3n://</code>把文件搬到hdfs上也不是不可以&hellip;</li>
+<li>搬文件需要ssh到master节点上，页面也给出了清晰的ssh密钥使用教程，然而，ec2的ssh权限默认是不开的&hellip;</li>
+<li>遇到OutOfMemoryError的时候，除了花大量时间改配置外，还可以换一个内存大一些的集群，反正那么短的小时数也不贵&hellip;</li>
+</ul>
+
+<h2 id="最后">最后</h2>
+
+<p>以上3点每点均耗费了将近两个小时解决，作业deadline前尝试完全没用过的产品真是非常非常作死&hellip;</p>
+
+</article>
+
+
+
+
+
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_shortname  = 'qimublog';
+    var disqus_identifier = '/code/2016/01/18/amazon';
+
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
 
       </div>
     </div>
