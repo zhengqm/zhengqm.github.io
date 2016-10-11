@@ -6,11 +6,11 @@
     <meta property="wb:webmaster" content="0cd97aa41a31b4c7" />
     <title>Surprising JavaScript I - Scope & Closures &#8211; Qimu's Code and Life | 郑淇木的代码及日常</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="写过JavaScript代码，用过前端框架，但是对JavaScript自身的语言特性一直没有很好的理解。今天读完了《You Don&#39;t Know JS - Scope &amp; Closures》，了解到了许多出乎我意料的语言细节，记录于此。">
+    <meta name="description" content="写过JavaScript代码，用过前端框架，但是对JavaScript自身的语言特性一直没有很好的理解。今天读完了《You Don't Know JS - Scope &amp; Closures》，了解到了许多出乎我意料的语言细节，记录于此。">
     <meta name="author" content="郑淇木">
     <meta name="keywords" content="郑淇木 博客  Qimu Zheng">
-    <!--meta name="keywords" content="code"-->
-    <link rel="canonical" href="http://zhengqm.github.io/code/2015/06/18/Surprising%20JavaScript%20I%20-%20Scope%20&%20Closures/">
+    <!--meta name="keywords" content="Code"-->
+    <link rel="canonical" href="http://zhengqm.github.io/code/2015/06/18/Surprising-JavaScript-I-Scope-&-Closures/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/pixyll.css" type="text/css">
@@ -28,9 +28,9 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Surprising JavaScript I - Scope &amp; Closures">
-    <meta property="og:description" content="郑淇木的博客  Qimu Zheng&#39;s Blog">
-    <meta property="og:url" content="http://zhengqm.github.io/code/2015/06/18/Surprising%20JavaScript%20I%20-%20Scope%20&%20Closures/">
-    <meta property="og:site_name" content="Qimu&#39;s Code and Life | 郑淇木的代码及日常">
+    <meta property="og:description" content="郑淇木的博客  Qimu Zheng's Blog">
+    <meta property="og:url" content="http://zhengqm.github.io/code/2015/06/18/Surprising-JavaScript-I-Scope-&-Closures/">
+    <meta property="og:site_name" content="Qimu's Code and Life | 郑淇木的代码及日常">
 
     <!-- Icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
@@ -139,11 +139,11 @@
 <span class="p">}</span>
 
 <span class="kd">var</span> <span class="nx">o1</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">a</span><span class="o">:</span> <span class="mi">3</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">3</span>
 <span class="p">};</span>
 
 <span class="kd">var</span> <span class="nx">o2</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">b</span><span class="o">:</span> <span class="mi">3</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">3</span>
 <span class="p">};</span>
 
 <span class="nx">foo</span><span class="p">(</span> <span class="nx">o1</span> <span class="p">);</span>
@@ -157,7 +157,7 @@
 
 <p>如果你惊到了，说明你也遇到了“意想不到的副作用”。</p>
 
-<h2 id="function-scope-&amp;-block-scope">Function Scope &amp; Block Scope</h2>
+<h2 id="function-scope-amp-block-scope">Function Scope &amp; Block Scope</h2>
 
 <p>猜猜看，下面这片代码中<code>bar</code>、<code>bam</code>、<code>baz</code>、<code>i</code> 的scope是什么，在函数哪里可见。</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
@@ -192,25 +192,26 @@
 <p>除了支持block scope外，<code>let</code> 还把循环变量scope到了循环的每一次迭代中。在下面这片代码中：</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;i:&quot;</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"i:"</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
     <span class="p">},</span><span class="nx">i</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;i:&quot;</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"i:"</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
     <span class="p">},</span><span class="nx">i</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
 <span class="p">}</span>
+
 </code></pre></div>
 <p>第一个循环的输出是:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">i:6
+<div class="highlight"><pre><code class="language-" data-lang="">i:6
 i:6
 i:6
 i:6
 i:6
 </code></pre></div>
 <p>而第二个循环的输出是：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">i:1
+<div class="highlight"><pre><code class="language-" data-lang="">i:1
 i:2
 i:3
 i:4
@@ -250,19 +251,19 @@ i:5
 <p>所谓Closure,就是当一个函数在它的lexical scope之外被执行时，它仍能够访问它lexical scope内的变量。这并不难理解，但是当Closure和循环组合在一起时就要小心了，以之前使用过的一片代码为例：</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;i:&quot;</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"i:"</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
     <span class="p">},</span><span class="nx">i</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>我们期望它的输出是：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">i:1
+<div class="highlight"><pre><code class="language-" data-lang="">i:1
 i:2
 i:3
 i:4
 i:5
 </code></pre></div>
 <p>它的输出为：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">i:6
+<div class="highlight"><pre><code class="language-" data-lang="">i:6
 i:6
 i:6
 i:6

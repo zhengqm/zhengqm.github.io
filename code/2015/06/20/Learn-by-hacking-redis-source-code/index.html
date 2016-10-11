@@ -9,7 +9,7 @@
     <meta name="description" content="今天我下载了redis的源码，边读代码边为redis增加了一条简单的命令，从中了解了redis处理命令的流程及其内部对数据进行的抽象。">
     <meta name="author" content="郑淇木">
     <meta name="keywords" content="郑淇木 博客  Qimu Zheng">
-    <!--meta name="keywords" content="code"-->
+    <!--meta name="keywords" content="Code"-->
     <link rel="canonical" href="http://zhengqm.github.io/code/2015/06/20/Learn-by-hacking-redis-source-code/">
 
     <!-- Custom CSS -->
@@ -28,9 +28,9 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Learn by Hacking - Redis源码速览">
-    <meta property="og:description" content="郑淇木的博客  Qimu Zheng&#39;s Blog">
+    <meta property="og:description" content="郑淇木的博客  Qimu Zheng's Blog">
     <meta property="og:url" content="http://zhengqm.github.io/code/2015/06/20/Learn-by-hacking-redis-source-code/">
-    <meta property="og:site_name" content="Qimu&#39;s Code and Life | 郑淇木的代码及日常">
+    <meta property="og:site_name" content="Qimu's Code and Life | 郑淇木的代码及日常">
 
     <!-- Icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
@@ -139,61 +139,61 @@
 <p>接下来我们正式开始实现这个随机返回数组元素的 <code>randget</code> 命令。
 Redis所支持的所有命令均存储于<a href="https://github.com/antirez/redis/blob/unstable/src/redis.c">redis.c</a>文件开头的 <code>redisCommandTable</code> 数组中：</p>
 <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">struct</span> <span class="n">redisCommand</span> <span class="n">redisCommandTable</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="p">{</span><span class="s">&quot;get&quot;</span><span class="p">,</span><span class="n">getCommand</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&quot;rF&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
-    <span class="p">{</span><span class="s">&quot;randget&quot;</span><span class="p">,</span><span class="n">randgetCommand</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&quot;rF&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
-    <span class="p">{</span><span class="s">&quot;set&quot;</span><span class="p">,</span><span class="n">setCommand</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="s">&quot;wm&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"get"</span><span class="p">,</span><span class="n">getCommand</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">"rF"</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"randget"</span><span class="p">,</span><span class="n">randgetCommand</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">"rF"</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"set"</span><span class="p">,</span><span class="n">setCommand</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="s">"wm"</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
     <span class="p">...</span>
 </code></pre></div>
 <p>数组中的每个元素是一个 <code>redisCommand</code> 结构体，结构体中记录了关于一条命令的详尽信息，可见于<a href="https://github.com/antirez/redis/blob/unstable/src/redis.h">redis.h</a>，
 以数组中记录的第一条命令 <code>get</code> 命令为例，它说的是：</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"> <span class="p">{</span><span class="s">&quot;get&quot;</span><span class="p">,</span><span class="n">getCommand</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&quot;rF&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}</span>
-</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">+ 命令名称为get
+<div class="highlight"><pre><code class="language-c" data-lang="c"> <span class="p">{</span><span class="s">"get"</span><span class="p">,</span><span class="n">getCommand</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">"rF"</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}</span>
+</code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">+ 命令名称为get
 + 用于处理该命令的函数为getCommand
 + 命令参数个数为2
 + 是一条只读且复杂度为O(1)的命令
 + 变量名在参数列表中的下标为1,如 `GET foo`
 </code></pre></div>
 <p>基于这个，我首先在数组中加入了这个条目：</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="p">{</span><span class="s">&quot;randget&quot;</span><span class="p">,</span><span class="n">randgetCommand</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&quot;rF&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="p">{</span><span class="s">"randget"</span><span class="p">,</span><span class="n">randgetCommand</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">"rF"</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
 </code></pre></div>
 <p>由于这是个和列表相关的命令，我决定把函数 <code>randgetCommand</code> 和其他列表相关的函数放在一起。首先在 <code>redis.h</code> 加入一行声明：</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">randgetCommand</span><span class="p">(</span><span class="n">redisClient</span> <span class="o">*</span><span class="n">c</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="n">randgetCommand</span><span class="p">(</span><span class="n">redisClient</span> <span class="o">*</span><span class="n">c</span><span class="p">);</span>
 </code></pre></div>
 <p>在 <code>t_list.c</code> 中加入函数定义：</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">randgetCommand</span><span class="p">(</span><span class="n">redisClient</span> <span class="o">*</span><span class="n">c</span><span class="p">){</span>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="n">randgetCommand</span><span class="p">(</span><span class="n">redisClient</span> <span class="o">*</span><span class="n">c</span><span class="p">){</span>
 
 <span class="p">}</span>
 </code></pre></div>
 <p>不妨编译一下：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&gt; make
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; make
 </code></pre></div>
 <p>能够编译通过，那我们来试一试命令，先启动服务器端:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&gt; src/redis-server
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; src/redis-server
 </code></pre></div>
 <p>再在另外一个shell启动客户端</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&gt; src/redis-cli
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; src/redis-cli
 </code></pre></div>
 <p>并敲入：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">127.0.0.1:6379&gt; LPUSH mylist foo
+<div class="highlight"><pre><code class="language-" data-lang="">127.0.0.1:6379&gt; LPUSH mylist foo
 (integer) 1
 127.0.0.1:6379&gt; randget
-(error) ERR wrong number of arguments for &#39;randget&#39; command
+(error) ERR wrong number of arguments for 'randget' command
 127.0.0.1:6379&gt; randget mylist
 [hang up]
 </code></pre></div>
 <p>可以看到redis能正确识别 <code>randget</code> 应接收的参数个数。当参数个数正确时，redis识别了我们敲入的命令，但由于我们还没有填入命令的实现，程序没有正确进行回应而且程序挂起了。</p>
 
 <p>接下来就是在函数体中填入我们的实现了，命令需要接收一个列表名作为输入，并随机返回列表中的一个元素，抽象来说就是:</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">randgetCommand</span><span class="p">(</span><span class="n">redisClient</span> <span class="o">*</span><span class="n">c</span><span class="p">){</span>
-    <span class="c1">// 读入参数 </span>
-    <span class="c1">// 使用该参数是否可取出某个列表？</span>
-    <span class="c1">//      若否，返回空</span>
-    <span class="c1">// 读入列表，得到列表长度 length</span>
-    <span class="c1">// 若length为0</span>
-    <span class="c1">//      返回空</span>
-    <span class="c1">// 否则</span>
-    <span class="c1">//      随机取出[0,length)中某个整数作为下标，取出对应元素</span>
-<span class="p">}</span>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="n">randgetCommand</span><span class="p">(</span><span class="n">redisClient</span> <span class="o">*</span><span class="n">c</span><span class="p">){</span>
+    <span class="c1">// 读入参数 
+</span>    <span class="c1">// 使用该参数是否可取出某个列表？
+</span>    <span class="c1">//      若否，返回空
+</span>    <span class="c1">// 读入列表，得到列表长度 length
+</span>    <span class="c1">// 若length为0
+</span>    <span class="c1">//      返回空
+</span>    <span class="c1">// 否则
+</span>    <span class="c1">//      随机取出[0,length)中某个整数作为下标，取出对应元素
+</span><span class="p">}</span>
 </code></pre></div>
 <p>首先是获取命令参数并进行检查，由于各个关于列表的命令都需要使用类似的操作，我们参考了其他命令中的实现：</p>
 <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">robj</span> <span class="o">*</span><span class="n">o</span> <span class="o">=</span> <span class="n">lookupKeyReadOrReply</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">shared</span><span class="p">.</span><span class="n">nullbulk</span><span class="p">);</span>
@@ -238,11 +238,11 @@ Redis所支持的所有命令均存储于<a href="https://github.com/antirez/red
         <span class="n">addReply</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">shared</span><span class="p">.</span><span class="n">nullbulk</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="n">redisPanic</span><span class="p">(</span><span class="s">&quot;Unknown list encoding&quot;</span><span class="p">);</span>
+    <span class="n">redisPanic</span><span class="p">(</span><span class="s">"Unknown list encoding"</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>这段代码看起来有点复杂，所完成的工作就是以获取列表中的元素，将所得元素的指针存储于 <code>value</code> 中，并通过 <code>addReply</code> 或 <code>addReplyBulk</code> 将所得元素返回。至此命令所要完成的工作就完成了，函数的全貌是：</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">randgetCommand</span><span class="p">(</span><span class="n">redisClient</span> <span class="o">*</span><span class="n">c</span><span class="p">){</span>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="n">randgetCommand</span><span class="p">(</span><span class="n">redisClient</span> <span class="o">*</span><span class="n">c</span><span class="p">){</span>
     <span class="n">robj</span> <span class="o">*</span><span class="n">o</span> <span class="o">=</span> <span class="n">lookupKeyReadOrReply</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">shared</span><span class="p">.</span><span class="n">nullbulk</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">o</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">checkType</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">REDIS_LIST</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
     <span class="kt">long</span> <span class="kt">long</span> <span class="n">length</span> <span class="o">=</span> <span class="n">listTypeLength</span><span class="p">(</span><span class="n">o</span><span class="p">);</span>
@@ -278,14 +278,14 @@ Redis所支持的所有命令均存储于<a href="https://github.com/antirez/red
                 <span class="n">addReply</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">shared</span><span class="p">.</span><span class="n">nullbulk</span><span class="p">);</span>
             <span class="p">}</span>
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="n">redisPanic</span><span class="p">(</span><span class="s">&quot;Unknown list encoding&quot;</span><span class="p">);</span>
+            <span class="n">redisPanic</span><span class="p">(</span><span class="s">"Unknown list encoding"</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">return</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>接下来我们重新编译redis，并测试一下：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[client]
+<div class="highlight"><pre><code class="language-" data-lang="">[client]
 &gt; src/redis-cli
 # 初始化列表
 127.0.0.1:6379&gt; LPUSH list a
@@ -301,23 +301,23 @@ Redis所支持的所有命令均存储于<a href="https://github.com/antirez/red
 
 # 插入完毕，开始随机获取
 127.0.0.1:6379&gt; randget list
-&quot;e&quot;
+"e"
 127.0.0.1:6379&gt; randget list
-&quot;a&quot;
+"a"
 127.0.0.1:6379&gt; randget list
-&quot;b&quot;
+"b"
 127.0.0.1:6379&gt; randget list
-&quot;d&quot;
+"d"
 127.0.0.1:6379&gt; randget list
-&quot;e&quot;
+"e"
 127.0.0.1:6379&gt; randget list
-&quot;d&quot;
+"d"
 
 ＃ 错误处理
 127.0.0.1:6379&gt; set foo bar
 OK
 127.0.0.1:6379&gt; randget
-(error) ERR wrong number of arguments for &#39;randget&#39; command
+(error) ERR wrong number of arguments for 'randget' command
 127.0.0.1:6379&gt; randget foo
 (error) WRONGTYPE Operation against a key holding the wrong kind of value
 127.0.0.1:6379&gt; randget unknown
@@ -326,7 +326,7 @@ OK
 </code></pre></div>
 <p>可以看到命令能够正常工作，并且能够正确应对各种错误参数！</p>
 
-<h2 id="小结">小结</h2>
+<h2 id=">小结</h2>
 
 <p>今天我为redis添加了一条简单的命令，并从中了解到了redis的内部抽象及处理命令的流程。
 不得不说redis代码的易读性及可扩展性做得非常非常好，我只需了解几个文件就能够轻松添加一条命令。

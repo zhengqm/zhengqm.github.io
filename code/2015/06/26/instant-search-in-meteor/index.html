@@ -9,7 +9,7 @@
     <meta name="description" content="今天我使用 Meteor 搭建了一个简单的即时搜索工具，并将其部署在服务器上作为一个小小的实验室内部工具开始使用。">
     <meta name="author" content="郑淇木">
     <meta name="keywords" content="郑淇木 博客  Qimu Zheng">
-    <!--meta name="keywords" content="code"-->
+    <!--meta name="keywords" content="Code"-->
     <link rel="canonical" href="http://zhengqm.github.io/code/2015/06/26/instant-search-in-meteor/">
 
     <!-- Custom CSS -->
@@ -28,9 +28,9 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
     <meta property="og:title" content="120行代码实现基于Meteor的即时搜索工具">
-    <meta property="og:description" content="郑淇木的博客  Qimu Zheng&#39;s Blog">
+    <meta property="og:description" content="郑淇木的博客  Qimu Zheng's Blog">
     <meta property="og:url" content="http://zhengqm.github.io/code/2015/06/26/instant-search-in-meteor/">
-    <meta property="og:site_name" content="Qimu&#39;s Code and Life | 郑淇木的代码及日常">
+    <meta property="og:site_name" content="Qimu's Code and Life | 郑淇木的代码及日常">
 
     <!-- Icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
@@ -141,21 +141,21 @@
 </ul>
 
 <p>以 Hadoop 为例， 它在 Mongodb中的一条记录为：</p>
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span> 
-    <span class="nt">&quot;_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1430277742.791925&quot;</span><span class="p">,</span> 
-    <span class="nt">&quot;prj&quot;</span> <span class="p">:</span> <span class="s2">&quot;hadoop-common.git&quot;</span><span class="p">,</span>   
-    <span class="nt">&quot;repo&quot;</span> <span class="p">:</span> <span class="s2">&quot;git.apache.org&quot;</span><span class="p">,</span>    
-    <span class="nt">&quot;src_loc&quot;</span> <span class="p">:</span> <span class="s2">&quot;/path/to/datastore/git/git.apache.org_hadoop-common.git&quot;</span><span class="p">,</span> 
-    <span class="nt">&quot;log_loc&quot;</span> <span class="p">:</span> <span class="s2">&quot;/path/to/datastore/git/git.apache.org/hadoop-common.git&quot;</span><span class="p">,</span> 
-    <span class="nt">&quot;n_peo&quot;</span> <span class="p">:</span> <span class="mi">36</span><span class="p">,</span> 
-    <span class="nt">&quot;n_cmt&quot;</span> <span class="p">:</span> <span class="mi">5825</span><span class="err">，</span>
-    <span class="s2">&quot;vcs&quot;</span> <span class="p">:</span> <span class="s2">&quot;git&quot;</span>
-    <span class="s2">&quot;b_time&quot;</span> <span class="p">:</span> <span class="mi">200601</span><span class="p">,</span> 
-    <span class="nt">&quot;e_time&quot;</span> <span class="p">:</span> <span class="mi">201005</span><span class="p">,</span> 
-    <span class="nt">&quot;span&quot;</span> <span class="p">:</span> <span class="mi">52</span><span class="p">,</span>
-    <span class="nt">&quot;script&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> 
-<span class="p">}</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w"> 
+    </span><span class="nt">"_id"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"1430277742.791925"</span><span class="p">,</span><span class="w"> 
+    </span><span class="nt">"prj"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"hadoop-common.git"</span><span class="p">,</span><span class="w">   
+    </span><span class="nt">"repo"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"git.apache.org"</span><span class="p">,</span><span class="w">    
+    </span><span class="nt">"src_loc"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"/path/to/datastore/git/git.apache.org_hadoop-common.git"</span><span class="p">,</span><span class="w"> 
+    </span><span class="nt">"log_loc"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"/path/to/datastore/git/git.apache.org/hadoop-common.git"</span><span class="p">,</span><span class="w"> 
+    </span><span class="nt">"n_peo"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span><span class="w"> 
+    </span><span class="nt">"n_cmt"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">5825</span><span class="err">，</span><span class="w">
+    </span><span class="s2">"vcs"</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="s2">"git"</span><span class="w">
+    </span><span class="s2">"b_time"</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="mi">200601</span><span class="p">,</span><span class="w"> 
+    </span><span class="nt">"e_time"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">201005</span><span class="p">,</span><span class="w"> 
+    </span><span class="nt">"span"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"script"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> 
+</span><span class="err">}</span><span class="w">
+</span></code></pre></div>
 <p>然而尽管我们有了大量数据，也提取了这些数据的元信息，但是这些数据一直静静的躺在服务器的磁盘上，并没有被很好利用。其中一个重要的原因是我们缺少一个方便好用的搜索工具对数据进行探索。</p>
 
 <h3 id="instant-search">Instant Search</h3>
@@ -197,29 +197,29 @@ in pure JavaScript.</p>
 <h3 id="back-end">Back End</h3>
 
 <p>方便起见，我们将把客户端、服务器端的代码放在同一个 javascript 文件中。我们首先获取 Mongodb 中存储元数据的 collection:</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">Items</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mongo</span><span class="p">.</span><span class="nx">Collection</span><span class="p">(</span><span class="s2">&quot;log_info&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">Items</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mongo</span><span class="p">.</span><span class="nx">Collection</span><span class="p">(</span><span class="s2">"log_info"</span><span class="p">);</span>
 </code></pre></div>
 <p>值得注意的是，这个对象既可在客户端代码中使用，也可在服务器端代码使用， Meteor 会基于 DDP 协议帮我们搞定数据在服务器、客户端之间的传输问题。</p>
 
 <p>在服务器端，我们根据用户提交的关键字对数据库进行查询，并发布 (publish) 与之相关的数据：</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">if</span> <span class="p">(</span><span class="nx">Meteor</span><span class="p">.</span><span class="nx">isServer</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">Meteor</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">queryString</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">Meteor</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s1">'items'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">queryString</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="nx">query</span><span class="p">(</span><span class="nx">Items</span><span class="p">,</span> <span class="nx">queryString</span><span class="p">)</span> <span class="c1">// To implement later</span>
   <span class="p">})</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>在客户端，当用户键入查询时，我们捕捉键盘输入事件，并将查询字符串存储于 Session 中，并根据查询字符串向服务器端订阅 (subscribe) 新数据：</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="nx">Template</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">events</span><span class="p">({</span>
-    <span class="s2">&quot;keyup #search-box&quot;</span><span class="o">:</span><span class="nx">_</span><span class="p">.</span><span class="nx">throttle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">){</span>
-      <span class="nx">Session</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;queryString&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
-      <span class="nx">Meteor</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
+    <span class="s2">"keyup #search-box"</span><span class="p">:</span><span class="nx">_</span><span class="p">.</span><span class="nx">throttle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">){</span>
+      <span class="nx">Session</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'queryString'</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
+      <span class="nx">Meteor</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">'items'</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
     <span class="p">},</span> <span class="mi">50</span><span class="p">)</span>
   <span class="p">})</span>
 </code></pre></div>
 <p>另外我们需要一个帮助函数对所得数据进行展示，这个函数将会在模板中被使用:</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="nx">Template</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">helpers</span><span class="p">({</span>
-    <span class="nx">items</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">query</span><span class="p">(</span><span class="nx">Items</span><span class="p">,</span> <span class="nx">Session</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;queryString&#39;</span><span class="p">))</span>
+    <span class="na">items</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">query</span><span class="p">(</span><span class="nx">Items</span><span class="p">,</span> <span class="nx">Session</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'queryString'</span><span class="p">))</span>
     <span class="p">}</span>
   <span class="p">});</span>
 </code></pre></div>
@@ -232,25 +232,25 @@ in pure JavaScript.</p>
 </ul>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">query</span><span class="p">(</span><span class="nx">collections</span><span class="p">,</span> <span class="nx">queryString</span><span class="p">){</span>
   <span class="kd">var</span> <span class="nx">limit</span> <span class="o">=</span> <span class="mi">40</span>
-  <span class="kd">var</span> <span class="nx">query</span> <span class="o">=</span> <span class="nx">queryString</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+  <span class="kd">var</span> <span class="nx">query</span> <span class="o">=</span> <span class="nx">queryString</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
   <span class="kd">var</span> <span class="nx">andArray</span> <span class="o">=</span> <span class="p">[]</span>
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">query</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">query</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">query</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">continue</span>
     <span class="p">}</span>
     <span class="kd">var</span> <span class="nx">testSpecial</span>  <span class="o">=</span> <span class="nx">parseSpecial</span><span class="p">(</span><span class="nx">query</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">testSpecial</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">andArray</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">testSpecial</span><span class="p">)</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">regEx</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">query</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="s1">&#39;ig&#39;</span><span class="p">)</span>
-      <span class="nx">andArray</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="nx">prj</span><span class="o">:</span> <span class="nx">regEx</span><span class="p">})</span>
+      <span class="kd">var</span> <span class="nx">regEx</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">query</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="s1">'ig'</span><span class="p">)</span>
+      <span class="nx">andArray</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="na">prj</span><span class="p">:</span> <span class="nx">regEx</span><span class="p">})</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
   <span class="k">if</span> <span class="p">(</span><span class="nx">andArray</span><span class="p">.</span><span class="nx">length</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">){</span>
-    <span class="k">return</span> <span class="nx">collections</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">$and</span><span class="o">:</span> <span class="nx">andArray</span><span class="p">},</span> <span class="p">{</span><span class="nx">limit</span><span class="o">:</span><span class="nx">limit</span><span class="p">})</span>
+    <span class="k">return</span> <span class="nx">collections</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="na">$and</span><span class="p">:</span> <span class="nx">andArray</span><span class="p">},</span> <span class="p">{</span><span class="na">limit</span><span class="p">:</span><span class="nx">limit</span><span class="p">})</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">collections</span><span class="p">.</span><span class="nx">find</span><span class="p">({},{</span><span class="nx">limit</span><span class="o">:</span><span class="nx">limit</span><span class="p">})</span>
+    <span class="k">return</span> <span class="nx">collections</span><span class="p">.</span><span class="nx">find</span><span class="p">({},{</span><span class="na">limit</span><span class="p">:</span><span class="nx">limit</span><span class="p">})</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -260,21 +260,21 @@ in pure JavaScript.</p>
 <span class="kd">function</span> <span class="nx">parseSpecial</span><span class="p">(</span><span class="nx">str</span><span class="p">){</span>
   <span class="kd">var</span> <span class="nx">relation</span>
   <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
-    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">)</span>
-    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">$lt</span><span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">'&lt;'</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'&lt;'</span><span class="p">)</span>
+    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span> <span class="na">$lt</span><span class="p">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
     <span class="k">return</span> <span class="nx">result</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
-    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">)</span>
-    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">$gt</span><span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">'&gt;'</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'&gt;'</span><span class="p">)</span>
+    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span> <span class="na">$gt</span><span class="p">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
     <span class="k">return</span> <span class="nx">result</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
-    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">'='</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'='</span><span class="p">)</span>
     <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="nx">result</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
-    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
-    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;ig&#39;</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">':'</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+    <span class="nx">relation</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)</span>
+    <span class="nx">result</span><span class="p">[</span><span class="nx">relation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">relation</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">'ig'</span><span class="p">)</span>
     <span class="k">return</span> <span class="nx">result</span>
   <span class="p">}</span> 
   <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
@@ -285,8 +285,8 @@ in pure JavaScript.</p>
 <h3 id="front-end">Front End</h3>
 
 <p>在前端中，我们需要一个模板对数据进行展示：</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;template</span> <span class="na">name=</span><span class="s">&quot;item&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;dl</span> <span class="na">class=</span><span class="s">&quot;dl-horizontal&quot;</span><span class="nt">&gt;</span>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;template</span> <span class="na">name=</span><span class="s">"item"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;dl</span> <span class="na">class=</span><span class="s">"dl-horizontal"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;dt&gt;</span>Project<span class="nt">&lt;/dt&gt;</span>            <span class="nt">&lt;dd&gt;</span>{{prj}}<span class="nt">&lt;/dd&gt;</span>
     <span class="nt">&lt;dt&gt;</span>Repository<span class="nt">&lt;/dt&gt;</span>         <span class="nt">&lt;dd&gt;</span>{{repo}}<span class="nt">&lt;/dd&gt;</span>
     <span class="nt">&lt;dt&gt;</span>Time Span<span class="nt">&lt;/dt&gt;</span>          <span class="nt">&lt;dd&gt;</span>{{b_time}} - {{e_time}}<span class="nt">&lt;/dd&gt;</span>
@@ -301,15 +301,15 @@ in pure JavaScript.</p>
 </code></pre></div>
 <p>并且在 <code>body</code> 中使用这个模板：</p>
 <div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;body&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;h1&gt;</span>Source Repo Search<span class="nt">&lt;/h1&gt;</span>
-      <span class="nt">&lt;form</span> <span class="na">class=</span><span class="s">&quot;form-horizontal&quot;</span> <span class="na">onsubmit=</span><span class="s">&quot;return false;&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;form-group&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;search-box&quot;</span> 
-        <span class="na">placeholder=</span><span class="s">&quot;Type project keyword to search&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;form</span> <span class="na">class=</span><span class="s">"form-horizontal"</span> <span class="na">onsubmit=</span><span class="s">"return false;"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">id=</span><span class="s">"search-box"</span> 
+        <span class="na">placeholder=</span><span class="s">"Type project keyword to search"</span><span class="nt">&gt;</span>
       <span class="nt">&lt;/div&gt;</span>
       <span class="nt">&lt;/form&gt;</span>
-      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&#39;help&#39;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">'help'</span><span class="nt">&gt;</span>
         <span class="nt">&lt;small&gt;</span>Possible options: repo | b_time | e_time | span | vcs | n_cmt | n_peo <span class="nt">&lt;/small&gt;&lt;br&gt;</span>
         <span class="nt">&lt;small&gt;</span>Possible operators:  <span class="ni">&amp;gt;</span> | = | <span class="ni">&amp;lt;</span> | : <span class="nt">&lt;/small&gt;&lt;br&gt;</span>
         <span class="nt">&lt;small&gt;</span>RegEx supported.<span class="nt">&lt;/small&gt;</span>
@@ -325,8 +325,8 @@ in pure JavaScript.</p>
 <p>可以看到 Meteor 所使用的模板语言是非常简单直接的。另外在 <code>head</code> 中我们需要 <code>bootstrap</code> 中的样式:</p>
 <div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;head&gt;</span>
   <span class="nt">&lt;title&gt;</span>SRSearch<span class="nt">&lt;/title&gt;</span>
-  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/css/bootstrap.min.css&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/css/bootstrap-theme.min.css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/css/bootstrap.min.css"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/css/bootstrap-theme.min.css"</span><span class="nt">&gt;</span>
 <span class="nt">&lt;/head&gt;</span>
 </code></pre></div>
 <p>这样所有功能就完成了，所有代码（包括空行）不到120行，下面是最终效果：</p>
