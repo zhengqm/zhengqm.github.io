@@ -6,11 +6,11 @@
     <meta property="wb:webmaster" content="0cd97aa41a31b4c7" />
     <title>Surprising JavaScript I - Scope & Closures &#8211; Qimu's Code and Life | 郑淇木的代码及日常</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="写过JavaScript代码，用过前端框架，但是对JavaScript自身的语言特性一直没有很好的理解。今天读完了《You Don&#39;t Know JS - Scope &amp; Closures》，了解到了许多出乎我意料的语言细节，记录于此。">
+    <meta name="description" content="写过JavaScript代码，用过前端框架，但是对JavaScript自身的语言特性一直没有很好的理解。今天读完了《You Don't Know JS - Scope &amp; Closures》，了解到了许多出乎我意料的语言细节，记录于此。">
     <meta name="author" content="郑淇木">
     <meta name="keywords" content="郑淇木 博客  Qimu Zheng">
-    <!--meta name="keywords" content="code"-->
-    <link rel="canonical" href="http://zhengqm.github.io/code/2015/06/18/Surprising%20JavaScript%20I%20-%20Scope%20&%20Closures/">
+    <!--meta name="keywords" content="Code"-->
+    <link rel="canonical" href="http://localhost:4000/code/2015/06/18/Surprising-JavaScript-I-Scope-&-Closures/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/pixyll.css" type="text/css">
@@ -28,11 +28,11 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Surprising JavaScript I - Scope &amp; Closures">
-    <meta property="og:description" content="郑淇木的博客  Qimu Zheng&#39;s Blog">
-    <meta property="og:url" content="http://zhengqm.github.io/code/2015/06/18/Surprising%20JavaScript%20I%20-%20Scope%20&%20Closures/">
-    <meta property="og:site_name" content="Qimu&#39;s Code and Life | 郑淇木的代码及日常">
+    <meta property="og:description" content="郑淇木的博客  Qimu Zheng's Blog">
+    <meta property="og:url" content="http://localhost:4000/code/2015/06/18/Surprising-JavaScript-I-Scope-&-Closures/">
+    <meta property="og:site_name" content="Qimu's Code and Life | 郑淇木的代码及日常">
 
-    <!-- Icons -->
+    <!-- Icons
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
@@ -47,6 +47,7 @@
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
     <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
     <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+     -->
         
     
     <script type="text/javascript">
@@ -67,10 +68,10 @@
     <header class="site-header px2 px-responsive">
   <div class="mt2 wrap">
     <div class="measure">
-      <a href="http://zhengqm.github.io" class="site-title">Qimu's Code and Life | 郑淇木的代码及日常</a>
+      <a href="http://localhost:4000" class="site-title">Qimu's Code and Life | 郑淇木的代码及日常</a>
       <nav class="site-nav right">
         <a href="/about/">About</a>
-<a href="/contact/">Contact</a>
+<!--a href="/contact/">Contact</a-->
 
       </nav>
       <div class="clearfix"></div>
@@ -122,28 +123,31 @@
 </div>
 
 <article class="post-content">
-  <p>写过JavaScript代码，用过前端框架，但是对JavaScript自身的语言特性一直没有很好的理解。在很长一段时间中我只了解JavaScript的基本语法，并在以一种 stackoverflow-oriented 的方式写代码。今天读完了<a href="https://github.com/getify/You-Dont-Know-JS/tree/master/scope%20%26%20closures">《You Don&rsquo;t Know JS: Scope &amp; Closures》</a>，了解到了许多出乎我意料的语言细节，记录于此。</p>
+  <p>写过JavaScript代码，用过前端框架，但是对JavaScript自身的语言特性一直没有很好的理解。在很长一段时间中我只了解JavaScript的基本语法，并在以一种 stackoverflow-oriented 的方式写代码。今天读完了<a href="https://github.com/getify/You-Dont-Know-JS/tree/master/scope%20%26%20closures">《You Don’t Know JS: Scope &amp; Closures》</a>，了解到了许多出乎我意料的语言细节，记录于此。</p>
 
 <h2 id="scope">Scope</h2>
 
 <p>对变量赋值时，会从当前到scope到全局scope逐步寻找变量的声明，如果一直找不到的话将变量添加到全局scope中。从内到外寻找变量声明非常容易接受，但是将变量直接往全局scope里面扔意味着一些意想不到的副作用：</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="c1">// ReferenceError</span>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="c1">// ReferenceError</span>
 <span class="p">(</span><span class="kd">function</span><span class="p">(){</span><span class="nx">item</span> <span class="o">=</span> <span class="mi">1</span><span class="p">})()</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="c1">// 1 -- 全局变量  :(</span>
-</code></pre></div>
+</code></pre>
+</div>
 <p>如果上面这片代码太简单粗暴的话，不妨看看这个：</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">with</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="kd">var</span> <span class="nx">o1</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">a</span><span class="o">:</span> <span class="mi">3</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">3</span>
 <span class="p">};</span>
 
 <span class="kd">var</span> <span class="nx">o2</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">b</span><span class="o">:</span> <span class="mi">3</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">3</span>
 <span class="p">};</span>
 
 <span class="nx">foo</span><span class="p">(</span> <span class="nx">o1</span> <span class="p">);</span>
@@ -152,20 +156,23 @@
 <span class="nx">foo</span><span class="p">(</span> <span class="nx">o2</span> <span class="p">);</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">o2</span><span class="p">.</span><span class="nx">a</span> <span class="p">);</span> <span class="c1">// undefined</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">a</span> <span class="p">);</span> <span class="c1">// 2 -- 全局变量  :(</span>
-</code></pre></div>
-<p>在调用 <code>foo(o2)</code> 时，解释器首先在 <code>o2</code> 里找变量 <code>a</code> ，发现找不到于是在上一层scope即全局scope中找变量 <code>a</code> ，发现还是找不到，于是直接把变量 <code>a</code> 加到全局scope中，并赋值为 <code>2</code>&hellip;</p>
+</code></pre>
+</div>
+
+<p>在调用 <code class="highlighter-rouge">foo(o2)</code> 时，解释器首先在 <code class="highlighter-rouge">o2</code> 里找变量 <code class="highlighter-rouge">a</code> ，发现找不到于是在上一层scope即全局scope中找变量 <code class="highlighter-rouge">a</code> ，发现还是找不到，于是直接把变量 <code class="highlighter-rouge">a</code> 加到全局scope中，并赋值为 <code class="highlighter-rouge">2</code>…</p>
 
 <p>如果你惊到了，说明你也遇到了“意想不到的副作用”。</p>
 
-<h2 id="function-scope-amp-block-scope">Function Scope &amp; Block Scope</h2>
+<h2 id="function-scope--block-scope">Function Scope &amp; Block Scope</h2>
 
-<p>猜猜看，下面这片代码中<code>bar</code>、<code>bam</code>、<code>baz</code>、<code>i</code> 的scope是什么，在函数哪里可见。</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+<p>猜猜看，下面这片代码中<code class="highlighter-rouge">bar</code>、<code class="highlighter-rouge">bam</code>、<code class="highlighter-rouge">baz</code>、<code class="highlighter-rouge">i</code> 的scope是什么，在函数哪里可见。</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">bar</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">bar</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="nx">bam</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">baz</span> <span class="o">=</span> <span class="nx">bar</span> <span class="o">*</span> <span class="mi">10</span><span class="p">;</span>
     <span class="p">}</span>
-
+    
     <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">){</span>
         <span class="nx">baz</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
@@ -174,115 +181,155 @@
 
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">bam</span> <span class="p">);</span>
 <span class="p">}</span>
-</code></pre></div>
-<p>如果你说 <code>bam</code> 在被声明后可见，<code>i</code> 的scope只限于循环内部，你就猜错了。所有这些变量在整个函数中都是可见的，它们的scope都是 <code>foo</code> 函数内部。原因是JavaScript并不支持我们通常意义下的block scope，JavaScript只支持最简单的function scope，即所有scope均以函数为最小单位。</p>
+</code></pre>
+</div>
 
-<p>这当然是不合理的，所有程序设计课程都告诉我们要尽可能隐藏细节，当 <code>i</code> 只用来完成循环的时候，没理由让整个函数都看到这个变量。于是在新标准中，我们有了关键字 <code>let</code>，为JavaScript添加了block scope支持：</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">n</span><span class="p">){</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bar</span><span class="p">);</span> <span class="c1">// 不可见</span>
+<p>如果你说 <code class="highlighter-rouge">bam</code> 在被声明后可见，<code class="highlighter-rouge">i</code> 的scope只限于循环内部，你就猜错了。所有这些变量在整个函数中都是可见的，它们的scope都是 <code class="highlighter-rouge">foo</code> 函数内部。原因是JavaScript并不支持我们通常意义下的block scope，JavaScript只支持最简单的function scope，即所有scope均以函数为最小单位。</p>
 
-    <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">){</span>
-        <span class="kd">let</span> <span class="nx">bar</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bar</span><span class="p">)</span> <span class="c1">//可见</span>
-    <span class="p">}</span>
+<p>这当然是不合理的，所有程序设计课程都告诉我们要尽可能隐藏细节，当 <code class="highlighter-rouge">i</code> 只用来完成循环的时候，没理由让整个函数都看到这个变量。于是在新标准中，我们有了关键字 <code class="highlighter-rouge">let</code>，为JavaScript添加了block scope支持：</p>
 
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bar</span><span class="p">)</span> <span class="c1">//不可见</span>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">n</span><span class="p">){</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bar</span><span class="p">);</span> <span class="c1">// 不可见</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">){</span>
+		<span class="kd">let</span> <span class="nx">bar</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bar</span><span class="p">)</span> <span class="c1">//可见</span>
+	<span class="p">}</span>
+	
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bar</span><span class="p">)</span> <span class="c1">//不可见</span>
 <span class="p">}</span>
-</code></pre></div>
-<p>除了支持block scope外，<code>let</code> 还把循环变量scope到了循环的每一次迭代中。在下面这片代码中：</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</code></pre>
+</div>
+
+<p>除了支持block scope外，<code class="highlighter-rouge">let</code> 还把循环变量scope到了循环的每一次迭代中。在下面这片代码中：</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;i:&quot;</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"i:"</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
     <span class="p">},</span><span class="nx">i</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;i:&quot;</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"i:"</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
     <span class="p">},</span><span class="nx">i</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre></div>
+
+</code></pre>
+</div>
+
 <p>第一个循环的输出是:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">i:6
+
+<div class="highlighter-rouge"><pre class="highlight"><code>i:6
 i:6
 i:6
 i:6
 i:6
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>而第二个循环的输出是：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">i:1
+
+<div class="highlighter-rouge"><pre class="highlight"><code>i:1
 i:2
 i:3
 i:4
 i:5
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>这是一个很棒的特性！早点知道这个特性的话，上个学期用D3.js写的大作业的代码应该会干净不少。</p>
 
 <h2 id="hoisting">Hoisting</h2>
 
 <p>猜猜看：下面这片代码的输出是什么？</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
 <span class="kd">var</span> <span class="nx">a</span><span class="p">;</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">a</span> <span class="p">);</span>
-</code></pre></div>
-<p>答案是 <code>2</code> 而非 <code>undefined</code>，</p>
+</code></pre>
+</div>
+
+<p>答案是 <code class="highlighter-rouge">2</code> 而非 <code class="highlighter-rouge">undefined</code>，</p>
 
 <p>继续猜：下面这片代码的输出是什么？</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">a</span> <span class="p">);</span>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">a</span> <span class="p">);</span>
 <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-</code></pre></div>
-<p>答案是 <code>undefined</code> 而非 <code>ReferenceError</code>。</p>
+</code></pre>
+</div>
+
+<p>答案是 <code class="highlighter-rouge">undefined</code> 而非 <code class="highlighter-rouge">ReferenceError</code>。</p>
 
 <p>事情的缘由是解释器会把变量的声明“提前”(hoisting)，上述代码变成了：</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">a</span><span class="p">;</span>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">a</span><span class="p">;</span>
 <span class="nx">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">a</span> <span class="p">);</span>
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>以及</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">a</span><span class="p">;</span>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">a</span><span class="p">;</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">a</span> <span class="p">);</span>
 <span class="nx">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-</code></pre></div>
-<p>所以输出自然是 <code>2</code> 和 <code>undefined</code> 了。</p>
+</code></pre>
+</div>
+
+<p>所以输出自然是 <code class="highlighter-rouge">2</code> 和 <code class="highlighter-rouge">undefined</code> 了。</p>
 
 <h2 id="closure">Closure</h2>
 
 <p>所谓Closure,就是当一个函数在它的lexical scope之外被执行时，它仍能够访问它lexical scope内的变量。这并不难理解，但是当Closure和循环组合在一起时就要小心了，以之前使用过的一片代码为例：</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;i:&quot;</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"i:"</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
     <span class="p">},</span><span class="nx">i</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>我们期望它的输出是：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">i:1
+
+<div class="highlighter-rouge"><pre class="highlight"><code>i:1
 i:2
 i:3
 i:4
 i:5
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>它的输出为：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">i:6
+
+<div class="highlighter-rouge"><pre class="highlight"><code>i:6
 i:6
 i:6
 i:6
 i:6
-</code></pre></div>
-<p>上述输出的原因是回调函数实际捕捉的是一个共享的scope，在这个scope中，只有一个变量 <code>i</code>，而在执行时该变量的值已被置为 <code>6</code>，所以得到了我们看到的输出。
+</code></pre>
+</div>
+
+<p>上述输出的原因是回调函数实际捕捉的是一个共享的scope，在这个scope中，只有一个变量 <code class="highlighter-rouge">i</code>，而在执行时该变量的值已被置为 <code class="highlighter-rouge">6</code>，所以得到了我们看到的输出。
 为了得到我们希望的输出，我们需要在每次迭代中创建一个新的scope：</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">j</span><span class="p">){</span>
         <span class="nx">setTimeout</span><span class="p">(</span> <span class="kd">function</span> <span class="nx">timer</span><span class="p">(){</span>
             <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">j</span> <span class="p">);</span>
         <span class="p">},</span> <span class="nx">j</span><span class="o">*</span><span class="mi">1000</span> <span class="p">);</span>
     <span class="p">})(</span> <span class="nx">i</span> <span class="p">);</span>
 <span class="p">}</span>
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>这样每次迭代的回调函数都能捕捉一个不同的scope，我们也得到了希望得到的输出。</p>
 
 <h2 id="more">More</h2>
 
-<p>除上述内容外，<a href="https://github.com/getify/You-Dont-Know-JS/tree/master/scope%20%26%20closures">《You Don&rsquo;t Know JS: Scope &amp; Closures》</a>还介绍了许多JavaScript中与Scope及Closure相关的语言特性，如果你和我一样一直靠Stackoverflow写JavaScript代码，想了解更多的语言细节又不想啃《JavaScript权威指南》这种大部头，这本书绝对值得一读。</p>
+<p>除上述内容外，<a href="https://github.com/getify/You-Dont-Know-JS/tree/master/scope%20%26%20closures">《You Don’t Know JS: Scope &amp; Closures》</a>还介绍了许多JavaScript中与Scope及Closure相关的语言特性，如果你和我一样一直靠Stackoverflow写JavaScript代码，想了解更多的语言细节又不想啃《JavaScript权威指南》这种大部头，这本书绝对值得一读。</p>
+
 
 </article>
 

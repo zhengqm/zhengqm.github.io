@@ -9,8 +9,8 @@
     <meta name="description" content="这两天基于python及scipy搭建了一个简单的音乐（音频）搜索工具，能够根据音乐片段对曲库进行检索，并在嘈杂环境中经受住了考验。">
     <meta name="author" content="郑淇木">
     <meta name="keywords" content="郑淇木 博客  Qimu Zheng">
-    <!--meta name="keywords" content="code"-->
-    <link rel="canonical" href="http://zhengqm.github.io/code/2015/07/23/write-you-a-song-finder/">
+    <!--meta name="keywords" content="Code"-->
+    <link rel="canonical" href="http://localhost:4000/code/2015/07/23/write-you-a-song-finder/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/pixyll.css" type="text/css">
@@ -28,11 +28,11 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
     <meta property="og:title" content="90行python搭一个音乐搜索工具 —— Song Finder">
-    <meta property="og:description" content="郑淇木的博客  Qimu Zheng&#39;s Blog">
-    <meta property="og:url" content="http://zhengqm.github.io/code/2015/07/23/write-you-a-song-finder/">
-    <meta property="og:site_name" content="Qimu&#39;s Code and Life | 郑淇木的代码及日常">
+    <meta property="og:description" content="郑淇木的博客  Qimu Zheng's Blog">
+    <meta property="og:url" content="http://localhost:4000/code/2015/07/23/write-you-a-song-finder/">
+    <meta property="og:site_name" content="Qimu's Code and Life | 郑淇木的代码及日常">
 
-    <!-- Icons -->
+    <!-- Icons
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
@@ -47,6 +47,7 @@
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
     <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
     <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+     -->
         
     
     <script type="text/javascript">
@@ -67,10 +68,10 @@
     <header class="site-header px2 px-responsive">
   <div class="mt2 wrap">
     <div class="measure">
-      <a href="http://zhengqm.github.io" class="site-title">Qimu's Code and Life | 郑淇木的代码及日常</a>
+      <a href="http://localhost:4000" class="site-title">Qimu's Code and Life | 郑淇木的代码及日常</a>
       <nav class="site-nav right">
         <a href="/about/">About</a>
-<a href="/contact/">Contact</a>
+<!--a href="/contact/">Contact</a-->
 
       </nav>
       <div class="clearfix"></div>
@@ -122,34 +123,43 @@
 </div>
 
 <article class="post-content">
-  <p><img src="/images/music.jpg" alt=""></p>
+  <p><img src="/images/music.jpg" alt="" /></p>
 
-<p>之前一段时间读到了<a href="http://www.redcode.nl/blog/2010/06/creating-shazam-in-java/">这篇博客</a>，其中描述了作者如何用java实现国外著名音乐搜索工具<a href="http://www.shazam.com/music/web/home.html">shazam</a>的基本功能。其中所提到的文章又将我引向了<a href="http://www.ee.columbia.edu/%7Edpwe/papers/Wang03-shazam.pdf">关于shazam的一篇论文</a>及<a href="https://laplacian.wordpress.com/2009/01/10/how-shazam-works/">另外一篇博客</a>。读完之后发现其中的原理并不十分复杂，但是方法对噪音的健壮性却非常好，出于好奇决定自己用python自己实现了一个简单的音乐搜索工具—— Song Finder, 它的核心功能被封装在 <code>SFEngine</code> 中，第三方依赖方面只使用到了 <code>scipy</code>。</p>
+<p>之前一段时间读到了<a href="http://www.redcode.nl/blog/2010/06/creating-shazam-in-java/">这篇博客</a>，其中描述了作者如何用java实现国外著名音乐搜索工具<a href="http://www.shazam.com/music/web/home.html">shazam</a>的基本功能。其中所提到的文章又将我引向了<a href="http://www.ee.columbia.edu/~dpwe/papers/Wang03-shazam.pdf">关于shazam的一篇论文</a>及<a href="https://laplacian.wordpress.com/2009/01/10/how-shazam-works/">另外一篇博客</a>。读完之后发现其中的原理并不十分复杂，但是方法对噪音的健壮性却非常好，出于好奇决定自己用python自己实现了一个简单的音乐搜索工具—— Song Finder, 它的核心功能被封装在 <code class="highlighter-rouge">SFEngine</code> 中，第三方依赖方面只使用到了 <code class="highlighter-rouge">scipy</code>。</p>
 
 <h3 id="工具demo">工具demo</h3>
 
-<p>这个demo在ipython下展示工具的使用，本项目名称为<a href="https://github.com/zhengqm/SongFinder">Song Finder</a>,我把索引、搜索的功能全部封装在<a href="https://github.com/zhengqm/SongFinder">Song Finder</a>中的<code>SFEngine</code>中。首先是简单的准备工作：</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">SFEngine</span> <span class="kn">import</span> <span class="o">*</span>
+<p>这个demo在ipython下展示工具的使用，本项目名称为<a href="https://github.com/zhengqm/SongFinder">Song Finder</a>,我把索引、搜索的功能全部封装在<a href="https://github.com/zhengqm/SongFinder">Song Finder</a>中的<code class="highlighter-rouge">SFEngine</code>中。首先是简单的准备工作：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">SFEngine</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">SFEngine</span><span class="p">()</span>
-</code></pre></div>
-<p>在这之后我们对现有歌曲进行索引，我在<code>original</code>目录下准备了几十首歌曲(.wav文件)作为曲库：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">In [3]: engine.index(&#39;original&#39;) # 索引该目录下的所有歌曲
-</code></pre></div>
-<p>在完成索引之后我们向<code>Song Finder</code>提交一段有背景噪音的歌曲录音进行搜索。对于这段《枫》在1分15秒左右的录音：</p>
+</code></pre>
+</div>
+
+<p>在这之后我们对现有歌曲进行索引，我在<code class="highlighter-rouge">original</code>目录下准备了几十首歌曲(.wav文件)作为曲库：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>In [3]: engine.index('original') # 索引该目录下的所有歌曲
+</code></pre>
+</div>
+
+<p>在完成索引之后我们向<code class="highlighter-rouge">Song Finder</code>提交一段有背景噪音的歌曲录音进行搜索。对于这段《枫》在1分15秒左右的录音：</p>
 
 <audio controls="controls">
   <source src="/images/record0.wav" type="audio/wav" />
 </audio>
 
 <p>工具的返回结果是：</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">engine</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;record/record0.wav&#39;</span><span class="p">)</span>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">engine</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">'record/record0.wav'</span><span class="p">)</span>
 <span class="n">original</span><span class="o">/</span><span class="err">周杰伦</span><span class="o">-</span><span class="err">枫</span> <span class="mi">73</span>
 <span class="n">original</span><span class="o">/</span><span class="err">周杰伦</span><span class="o">-</span><span class="err">枫</span> <span class="mi">31</span>
 <span class="n">original</span><span class="o">/</span><span class="err">周杰伦</span><span class="o">-</span><span class="err">枫</span> <span class="mi">10</span>
 <span class="n">original</span><span class="o">/</span><span class="err">周杰伦</span><span class="o">-</span><span class="err">枫</span> <span class="mi">28</span>
 <span class="n">original</span><span class="o">/</span><span class="err">我要快樂</span> <span class="o">-</span> <span class="err">張惠妹</span> <span class="mi">28</span>
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>其中展示的分别是歌曲名称及片段在歌曲中出现的位置（以秒计），可以看到工具正确找回了歌曲的曲名，也找到了其在歌曲中的正确位置。</p>
 
 <p>而对于这段《童话》在1分05秒左右的背景噪音更加嘈杂的录音：</p>
@@ -159,13 +169,16 @@
 </audio>
 
 <p>工具的返回结果是：</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">engine</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;record/record8.wav&#39;</span><span class="p">)</span>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">engine</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">'record/record8.wav'</span><span class="p">)</span>
 <span class="n">original</span><span class="o">/</span><span class="err">光良</span> <span class="o">-</span> <span class="err">童话</span> <span class="mi">67</span>
 <span class="n">original</span><span class="o">/</span><span class="err">光良</span> <span class="o">-</span> <span class="err">童话</span> <span class="mi">39</span>
 <span class="n">original</span><span class="o">/</span><span class="err">光良</span> <span class="o">-</span> <span class="err">童话</span> <span class="mi">33</span>
 <span class="n">original</span><span class="o">/</span><span class="err">光良</span> <span class="o">-</span> <span class="err">童话</span> <span class="mi">135</span>
 <span class="n">original</span><span class="o">/</span><span class="err">光良</span> <span class="o">-</span> <span class="err">童话</span> <span class="mi">69</span>
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>可以看到尽管噪音非常嘈杂，但是工具仍然能成功识别所对应的歌曲并对应到歌曲的正确位置，说明工具在噪音较大的环境下有良好的健壮性！</p>
 
 <p>项目主页： <a href="https://github.com/zhengqm/SongFinder">Github</a></p>
@@ -175,15 +188,16 @@
 <p>给定曲库对一个录音片段进行检索是一个不折不扣的搜索问题，但是对音频的搜索并不像对文档、数据的搜索那么直接。为了完成对音乐的搜索，工具需要完成下列3个任务：</p>
 
 <ul>
-<li>对曲库中的所有歌曲抽取特征</li>
-<li>以相同的方式对录音片段提取特征</li>
-<li>根据录音片段的特征对曲库进行搜索，返回最相似的歌曲及其在歌曲中的位置</li>
+  <li>对曲库中的所有歌曲抽取特征</li>
+  <li>以相同的方式对录音片段提取特征</li>
+  <li>根据录音片段的特征对曲库进行搜索，返回最相似的歌曲及其在歌曲中的位置</li>
 </ul>
 
-<h3 id="特征提取？离散傅立叶变换！">特征提取？离散傅立叶变换！</h3>
+<h3 id="特征提取离散傅立叶变换">特征提取？离散傅立叶变换！</h3>
 
-<p>为了对音乐（音频）提取特征，一个很直接的想法是得到音乐的音高的信息，而音高在物理上对应的则又是波的频率信息。为了获取这类信息，一个非常直接的额做法是使用离散傅叶变化对声音进行分析，即使用一个滑动窗口对声音进行采样，对窗口内的数据进行离散傅立叶变化，将时间域上的信息变换为频率域上的信息，使用<code>scipy</code>的接口可以很轻松的完成。在这之后我们将频率分段，提取每频率中振幅最大的频率：</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">extract_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+<p>为了对音乐（音频）提取特征，一个很直接的想法是得到音乐的音高的信息，而音高在物理上对应的则又是波的频率信息。为了获取这类信息，一个非常直接的额做法是使用离散傅叶变化对声音进行分析，即使用一个滑动窗口对声音进行采样，对窗口内的数据进行离散傅立叶变化，将时间域上的信息变换为频率域上的信息，使用<code class="highlighter-rouge">scipy</code>的接口可以很轻松的完成。在这之后我们将频率分段，提取每频率中振幅最大的频率：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">extract_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
     <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">interval</span>
     <span class="n">dst</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">scaled</span><span class="p">[</span><span class="n">start</span><span class="p">:</span> <span class="n">end</span><span class="p">])</span> 
     <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>  
@@ -195,10 +209,12 @@
                 <span class="mi">300</span> <span class="o">+</span> <span class="n">normalized</span><span class="p">[</span><span class="mi">300</span><span class="p">:</span><span class="mi">400</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">(),</span> \
                 <span class="mi">400</span> <span class="o">+</span> <span class="n">normalized</span><span class="p">[</span><span class="mi">400</span><span class="p">:]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()]</span>
     <span class="k">return</span> <span class="n">feature</span>
-</code></pre></div>
+</code></pre>
+</div>
 <p>这样，对于一个滑动窗口，我提取到了6个频率作为其特征。对于整段音频，我们重复调用这个函数进行特征抽取：</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">start_second</span><span class="p">,</span> <span class="n">duration</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">callback</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">start_second</span><span class="p">,</span> <span class="n">duration</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">callback</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+    
     <span class="n">start</span> <span class="o">=</span> <span class="n">start_second</span> <span class="o">*</span> <span class="mi">44100</span>
     <span class="k">if</span> <span class="n">duration</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">end</span> <span class="o">=</span> <span class="mf">1e15</span>
@@ -212,12 +228,14 @@
         <span class="k">if</span> <span class="n">callback</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">callback</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
         <span class="n">start</span> <span class="o">+=</span> <span class="n">interval</span>
-</code></pre></div>
-<p>其中44100为音频文件自身的采样频率，8192是我设定的取样窗口（对，这样hardcode是很不对的），<code>callback</code>是一个传入的函数，需要这个参数是因为在不同场景下对于所得到的特征会有不同的后续操作。</p>
+</code></pre>
+</div>
+
+<p>其中44100为音频文件自身的采样频率，8192是我设定的取样窗口（对，这样hardcode是很不对的），<code class="highlighter-rouge">callback</code>是一个传入的函数，需要这个参数是因为在不同场景下对于所得到的特征会有不同的后续操作。</p>
 
 <h3 id="匹配曲库">匹配曲库</h3>
 
-<p>在得到歌曲、录音的大量特征后，如何进行高效搜索是一个问题。一个有效的做法是建立一个特殊的哈希表，其中的key是频率，其对应的value是一系列<code>(曲名,时间)</code>的tuple，其记录的是某一歌曲在某一时间出现了某一特征频率，但是以频率为key而非以曲名或时间为key。</p>
+<p>在得到歌曲、录音的大量特征后，如何进行高效搜索是一个问题。一个有效的做法是建立一个特殊的哈希表，其中的key是频率，其对应的value是一系列<code class="highlighter-rouge">(曲名,时间)</code>的tuple，其记录的是某一歌曲在某一时间出现了某一特征频率，但是以频率为key而非以曲名或时间为key。</p>
 
 <p>表格。。</p>
 
@@ -225,28 +243,40 @@
 
 <p>当然有了这个哈希表还不够用，我们不可能把所有与特征频率相关的歌曲都抽出来，看看谁命中的次数多，因为这样会完全无视歌曲的时序信息，并引入一些错误的匹配。</p>
 
-<p>我们的做法是，对于录音中在<code>t</code>时间点的一个特征频率<code>f</code>，从曲库找出所有与<code>f</code>相关的<code>(曲名,时间)</code> tuple，例如我们得到了 </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[(s1, t1), (s2, t2), (s3, t3)]
-</code></pre></div>
-<p>我们使用时间进行对齐，得到这个列表 </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[(s1, t1-t), (s2, t2-t), (s3, t3-t)]
-</code></pre></div>
+<p>我们的做法是，对于录音中在<code class="highlighter-rouge">t</code>时间点的一个特征频率<code class="highlighter-rouge">f</code>，从曲库找出所有与<code class="highlighter-rouge">f</code>相关的<code class="highlighter-rouge">(曲名,时间)</code> tuple，例如我们得到了</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[(s1, t1), (s2, t2), (s3, t3)]
+</code></pre>
+</div>
+
+<p>我们使用时间进行对齐，得到这个列表</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[(s1, t1-t), (s2, t2-t), (s3, t3-t)]
+</code></pre>
+</div>
+
 <p>记为</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[(s1, t1`), (s2, t2`), (s3, t3`)]
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[(s1, t1`), (s2, t2`), (s3, t3`)]
+</code></pre>
+</div>
+
 <p>我们对所有时间点的所有特征频率均做上述操作，得到了一个大列表：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[(s1, t1`), (s2, t2`), (s3, t3`), ..., (sn, tn`)]
-</code></pre></div>
-<p>对这个列表进行计数，可以看到哪首歌曲的哪个时间点命中的次数最多，并将命中次数最多的<code>(曲名，时间)</code>对返回给用户。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[(s1, t1`), (s2, t2`), (s3, t3`), ..., (sn, tn`)]
+</code></pre>
+</div>
+
+<p>对这个列表进行计数，可以看到哪首歌曲的哪个时间点命中的次数最多，并将命中次数最多的<code class="highlighter-rouge">(曲名，时间)</code>对返回给用户。</p>
 
 <h3 id="不足">不足</h3>
 
 <p>这个小工具是一个几个小时写成的hack，有许都地方需要改进，例如：</p>
 
 <ul>
-<li>目前只支持了wav格式的曲库及录音</li>
-<li>所有数据都放在内存中，曲库体积增大时需要引入更好的后端存储</li>
-<li>索引应该并行化，匹配也应该并行化，匹配的模型其实是典型的map-reduce。</li>
+  <li>目前只支持了wav格式的曲库及录音</li>
+  <li>所有数据都放在内存中，曲库体积增大时需要引入更好的后端存储</li>
+  <li>索引应该并行化，匹配也应该并行化，匹配的模型其实是典型的map-reduce。</li>
 </ul>
 
 <h3 id="项目主页">项目主页</h3>
