@@ -10,9 +10,11 @@
         <title>LDA作为概率模型、概率近似算法的Case Study</title>
         <description>&lt;p&gt;在看完LDA的资料后，留在脑海中的印象是：&lt;/p&gt;
 
-&lt;p&gt;LDA可以看作是一个使用概率模型对语料库进行建模，并使用相关后验概率近似方法进行推断的一个case study。&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;LDA可以看作是一个使用概率模型对语料库进行建模，并使用相关后验概率近似方法进行推断的一个case study。&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;其中建立概率模型主要包括：&lt;/p&gt;
+&lt;p&gt;其中概率模型的建立主要包括：&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;基于对数据产生过程的假设写出依赖关系及概率分布&lt;/li&gt;
   &lt;li&gt;获取数据&lt;/li&gt;
