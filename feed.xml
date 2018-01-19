@@ -3,8 +3,8 @@
   <channel>
     <title>Qimu's Code and Life | 郑淇木的代码及日常</title>
     <description>郑淇木的博客  Qimu Zheng's Blog</description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <link>https://zhengqm.github.io/</link>
+    <atom:link href="https://zhengqm.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
         <title>打脸向的创业思考《重来》</title>
@@ -79,8 +79,8 @@
 &lt;/blockquote&gt;
 </description>
         <pubDate>Thu, 18 Jan 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/life/2018/01/18/rework-review/</link>
-        <guid isPermaLink="true">http://localhost:4000/life/2018/01/18/rework-review/</guid>
+        <link>https://zhengqm.github.io/life/2018/01/18/rework-review/</link>
+        <guid isPermaLink="true">https://zhengqm.github.io/life/2018/01/18/rework-review/</guid>
       </item>
     
       <item>
@@ -125,8 +125,8 @@
 
 </description>
         <pubDate>Wed, 03 Jan 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/code/2018/01/03/lda-as-a-case-study/</link>
-        <guid isPermaLink="true">http://localhost:4000/code/2018/01/03/lda-as-a-case-study/</guid>
+        <link>https://zhengqm.github.io/code/2018/01/03/lda-as-a-case-study/</link>
+        <guid isPermaLink="true">https://zhengqm.github.io/code/2018/01/03/lda-as-a-case-study/</guid>
       </item>
     
       <item>
@@ -292,8 +292,8 @@
 &lt;p&gt;&lt;a href=&quot;https://github.com/zhengqm/SongFinder&quot;&gt;Github&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Thu, 23 Jul 2015 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/code/2015/07/23/write-you-a-song-finder/</link>
-        <guid isPermaLink="true">http://localhost:4000/code/2015/07/23/write-you-a-song-finder/</guid>
+        <link>https://zhengqm.github.io/code/2015/07/23/write-you-a-song-finder/</link>
+        <guid isPermaLink="true">https://zhengqm.github.io/code/2015/07/23/write-you-a-song-finder/</guid>
       </item>
     
       <item>
@@ -543,8 +543,8 @@ in pure JavaScript.&lt;/p&gt;
 &lt;p&gt;今天我基于Meteor 框架，只用了120行代码实现了一个即时搜索工具的前端、后端，并支持正则、条件搜索功能。可以看到用 Meteor 开发实时应用是非常高效的。考虑到这个工具只使用了 Meteor 所提供特性中的冰山一角，Meteor 所能完成的事情着实令人期待。&lt;/p&gt;
 </description>
         <pubDate>Fri, 26 Jun 2015 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/code/2015/06/26/instant-search-in-meteor/</link>
-        <guid isPermaLink="true">http://localhost:4000/code/2015/06/26/instant-search-in-meteor/</guid>
+        <link>https://zhengqm.github.io/code/2015/06/26/instant-search-in-meteor/</link>
+        <guid isPermaLink="true">https://zhengqm.github.io/code/2015/06/26/instant-search-in-meteor/</guid>
       </item>
     
       <item>
@@ -808,8 +808,8 @@ OK
 
 </description>
         <pubDate>Sat, 20 Jun 2015 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/code/2015/06/20/Learn-by-hacking-redis-source-code/</link>
-        <guid isPermaLink="true">http://localhost:4000/code/2015/06/20/Learn-by-hacking-redis-source-code/</guid>
+        <link>https://zhengqm.github.io/code/2015/06/20/Learn-by-hacking-redis-source-code/</link>
+        <guid isPermaLink="true">https://zhengqm.github.io/code/2015/06/20/Learn-by-hacking-redis-source-code/</guid>
       </item>
     
       <item>
@@ -1023,8 +1023,8 @@ i:6
 
 </description>
         <pubDate>Thu, 18 Jun 2015 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/code/2015/06/18/Surprising-JavaScript-I-Scope-&-Closures/</link>
-        <guid isPermaLink="true">http://localhost:4000/code/2015/06/18/Surprising-JavaScript-I-Scope-&-Closures/</guid>
+        <link>https://zhengqm.github.io/code/2015/06/18/Surprising-JavaScript-I-Scope-&-Closures/</link>
+        <guid isPermaLink="true">https://zhengqm.github.io/code/2015/06/18/Surprising-JavaScript-I-Scope-&-Closures/</guid>
       </item>
     
       <item>
@@ -1032,8 +1032,8 @@ i:6
         <description>&lt;p&gt;仅以此博客督促自己多看书、多学习&lt;/p&gt;
 </description>
         <pubDate>Mon, 15 Jun 2015 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/life/2015/06/15/blog-setup/</link>
-        <guid isPermaLink="true">http://localhost:4000/life/2015/06/15/blog-setup/</guid>
+        <link>https://zhengqm.github.io/life/2015/06/15/blog-setup/</link>
+        <guid isPermaLink="true">https://zhengqm.github.io/life/2015/06/15/blog-setup/</guid>
       </item>
     
   </channel>
