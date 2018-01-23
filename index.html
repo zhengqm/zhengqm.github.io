@@ -49,9 +49,17 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-
+    
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      CommonHTML: {
+        scale: 85
+      }
+    });
+    </script>
     <script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
 
         
         <script type="text/javascript">
@@ -70,7 +78,7 @@
         </div>
 
     
-</script>
+
 
 
 </head>
@@ -129,6 +137,16 @@
   <div class="posts">
     
       <div class="post">
+        <p class="post-meta">Jan 23, 2018</p>
+        <a href="/code/2018/01/23/coordinate-descent-everywhere/" class="post-link"><h3 class="h2 post-title">到处都是坐标下降</h3></a>
+        <p class="post-summary">
+          
+            SVM的求解算法是坐标下降，EM算法是坐标下降，Gibbs Sampling是坐标下降，Variational Inference还是坐标下降
+          
+        </p>
+      </div>
+    
+      <div class="post">
         <p class="post-meta">Jan 18, 2018</p>
         <a href="/life/2018/01/18/rework-review/" class="post-link"><h3 class="h2 post-title">打脸向的创业思考《重来》</h3></a>
         <p class="post-summary">
@@ -164,16 +182,6 @@
         <p class="post-summary">
           
             今天我使用 Meteor 搭建了一个简单的即时搜索工具，并将其部署在服务器上作为一个小小的实验室内部工具开始使用。
-          
-        </p>
-      </div>
-    
-      <div class="post">
-        <p class="post-meta">Jun 20, 2015</p>
-        <a href="/code/2015/06/20/Learn-by-hacking-redis-source-code/" class="post-link"><h3 class="h2 post-title">Learn by Hacking - Redis源码速览</h3></a>
-        <p class="post-summary">
-          
-            今天我下载了redis的源码，边读代码边为redis增加了一条简单的命令，从中了解了redis处理命令的流程及其内部对数据进行的抽象。
           
         </p>
       </div>

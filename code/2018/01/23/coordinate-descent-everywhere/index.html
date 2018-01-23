@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta property="wb:webmaster" content="0cd97aa41a31b4c7" />
-    <title>LDA作为概率模型、概率近似算法的Case Study &#8211; Qimu's Code and Life | 郑淇木的代码及日常</title>
+    <title>到处都是坐标下降 &#8211; Qimu's Code and Life | 郑淇木的代码及日常</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="LDA:一个使用概率模型对语料库进行建模，并使用相关后验概率近似方法进行推断的一个case study">
+    <meta name="description" content="SVM的求解算法是坐标下降，EM算法是坐标下降，Gibbs Sampling是坐标下降，Variational Inference还是坐标下降">
     <meta name="author" content="郑淇木">
     <meta name="keywords" content="郑淇木 博客  Qimu Zheng">
     <!--meta name="keywords" content="Code"-->
-    <link rel="canonical" href="https://zhengqm.github.io/code/2018/01/03/lda-as-a-case-study/">
+    <link rel="canonical" href="https://zhengqm.github.io/code/2018/01/23/coordinate-descent-everywhere/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/pixyll.css" type="text/css">
@@ -27,9 +27,9 @@
     <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="LDA作为概率模型、概率近似算法的Case Study">
+    <meta property="og:title" content="到处都是坐标下降">
     <meta property="og:description" content="郑淇木的博客  Qimu Zheng's Blog">
-    <meta property="og:url" content="https://zhengqm.github.io/code/2018/01/03/lda-as-a-case-study/">
+    <meta property="og:url" content="https://zhengqm.github.io/code/2018/01/23/coordinate-descent-everywhere/">
     <meta property="og:site_name" content="Qimu's Code and Life | 郑淇木的代码及日常">
 
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
@@ -136,51 +136,76 @@
 
 
 <div class="post-header mb2">
-  <h1>LDA作为概率模型、概率近似算法的Case Study</h1>
-  <span class="post-meta">Jan 3, 2018</span><br>
+  <h1>到处都是坐标下降</h1>
+  <span class="post-meta">Jan 23, 2018</span><br>
   
   <span class="post-meta small">1 minute read</span>
 </div>
 
 <article class="post-content">
-  <p>在看完LDA的资料后，留在脑海中的印象是：</p>
+  <h2 id="坐标下降是坐标下降">坐标下降是坐标下降</h2>
 
-<blockquote>
-  <p>LDA可以看作是一个使用概率模型对语料库进行建模，并使用相关后验概率近似方法进行推断的一个case study。</p>
-</blockquote>
+<p>坐标下降法基于的思想是多变量函数F(x1, …, xn)可以通过每次沿一个方向优化来获取最小值，在整个过程中循环使用不同的坐标方向，直至函数收敛。</p>
 
-<p>其中概率模型的建立主要包括：</p>
+<p><img src="/images/Coordinate_descent.png" alt="" /></p>
+
+<h2 id="求解svm对偶形式的smo算法是坐标下降">求解<a href="https://en.wikipedia.org/wiki/Support_vector_machine">SVM</a>对偶形式的<a href="https://en.wikipedia.org/wiki/Sequential_minimal_optimization">SMO</a>算法是坐标下降</h2>
+
+<p>带软间隔的SVM的优化问题最后可写为：</p>
+
+<script type="math/tex; mode=display">max_\alpha W(\alpha)=\sum_{i=1}^{m} \alpha_i - {1 \over 2}\sum_{i,j=1}^{m} y^{(i)}y^{(j)} \alpha_i \alpha_j x^{(i)} x^{(j)} \\ 
+s.t. 0 \leqslant \alpha_i \leqslant C, i = 1,...,m \\
+\sum_{i=1}^{m}\alpha_iy^{(i)} = 0</script>
+
+<p>SMO算法给出的解法是每一步选取一对 \(\alpha_i\) 和 \(\alpha_j\)，固定除 \(\alpha_i\) 和 \(\alpha_j\) 之外的其他参数，根据约束条件将 \(\alpha_j\) 写为 \(\alpha_i\) 的函数表示，并确定W极值条件下的 \(\alpha_i\) 的取值。</p>
+
+<p>SMO算法的每一步可被视为对 \(\alpha_i\)（及 \(\alpha_j\) ）完成了一步<strong>坐标下降</strong>。</p>
+
+<h2 id="em算法是坐标下降"><a href="https://en.wikipedia.org/wiki/Expectation–maximization_algorithm">EM算法</a>是坐标下降</h2>
+
+<p>对于存在可观测变量X，隐变量Z，及参数theta的模型，用于求解其参数极大似然估计的EM算法可写为最大化模型的free energy：</p>
+
+<script type="math/tex; mode=display">F(q,\theta) = -D_{KL}(q||p_{Z|X}(-|x;\theta)) + logL(\theta;x)</script>
+
+<p>其中\(q\)为关于隐变量的一个概率分布，\(D_{KL}\)为两个分布的KL散度。</p>
+
+<p>则EM算法可被视为\(q\)和\(D_{KL}\)间的<strong>坐标下降</strong>：</p>
+
 <ul>
-  <li>基于对数据产生过程的假设写出依赖关系及概率分布</li>
-  <li>获取数据</li>
-  <li>获得模型参数的后验概率</li>
-  <li>对现有数据进行探索或对新数据进行预测</li>
+  <li>E-Step: \( q^{(t)} = argmax_q F(q, \theta^{(t)})\)</li>
+  <li>M-Step: \( \theta^{(t+1)} = argmax_{\theta}F(q^{(t)}, \theta)\)</li>
 </ul>
 
-<p>后验概率近似方法主要包括：</p>
+<h2 id="mean-field-variational-inference是坐标下降">(Mean Field) <a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods">Variational Inference</a>是坐标下降</h2>
+
+<p>Variational inference 尝试使用一个“简单”的概率分布\(q(z_{1:m})\)对后验概率分布\(p(z_{1:m}|x)\)进行近似。这一方法尝试优化的目标是最小化\(q(z_{1:m})\)与\(p(z_{1:m}|X)\)间的KL散度，亦等价于最大化模型的<a href="https://www.cs.princeton.edu/courses/archive/fall11/.../variational-inference-i.pdf">ELBO</a> (evidence lower bound)。</p>
+
+<p>Mean field variational inference中进一步假设\(q(z_{1:m})\)中各分量是独立的：</p>
+
+<script type="math/tex; mode=display">q(z_{1:m}) = q(z_1)q(z_2)...q(z_m)</script>
+
+<p>Mean field variational inference采用迭代的方式进行求解。在每一步中，选取其中一个分量\(q_k\)，固定其余分量不变，通过改变\(q_k\)以最大化ELBO，不断迭代求解直至完成对后验概率的近似。</p>
+
+<p>Mean field variational inference算法的每一步可被视为对\(q_k\)完成了一步<strong>坐标下降</strong>。</p>
+
+<h2 id="gibbs-sampling勉强是坐标下降"><a href="https://en.wikipedia.org/wiki/Gibbs_sampling">Gibbs Sampling</a>(勉强)是坐标下降</h2>
+
+<p>在Gibbs Sampling中，算法以迭代的方式对联合分布中的每个分量进行采样。对于\(x_j\)的第i+1次迭代，算法从以下分布中采样得到新的样本：</p>
+
+<script type="math/tex; mode=display">x_j \sim p(x_j^{(i+1)} | x_1^{(i+1)}, x_2^{(i+1)}, ..., x_{j-1}^{(i+1)}, x_{j+1}^{(i)}, ..., x_{n}^{(i)})</script>
+
+<p>这一逐个坐标进行采样的算法能够保证：</p>
 <ul>
-  <li>MCMC (Markov chain Monte Carlo)</li>
-  <li>Variational Inference</li>
+  <li>所采样本近似联合概率分布</li>
+  <li>样本的子集可用于近似边缘概率分布</li>
+  <li>各坐标的均值可近似各变量的期望</li>
 </ul>
 
-<p>它们在整个流程中扮演的角色是：</p>
+<p>这一算法的每次迭代可以视作对目标分布的一次<strong>坐标逼近</strong>。</p>
 
-<p><img src="/images/modeling.svg" /></p>
+<h2 id="到处都是坐标下降">到处都是坐标下降</h2>
 
-<p>LDA作为该流程的一个case study，具体做的事情是：</p>
-
-<ul>
-  <li>对一篇文章的产生过程进行假设（文章是关于主题的分布，主题是关于词汇的分布，每个单词对应于某个主题assignment），并写出联合概率分布</li>
-  <li>获得语料库</li>
-  <li>获得各隐变量的后验概率分布</li>
-  <li>探索各文章关于主题的分布，探索每个主题内单词的分布</li>
-</ul>
-
-<p><img src="/images/LDA.svg" /></p>
-
-<p>Todo:
-并行化的MCMC/VI?</p>
-
+<p>更广义的坐标下降：当原问题不易解时，将原问题划分为若干个更易解的子问题进行迭代求解，并证明迭代算法会收敛至原问题的解。</p>
 
 </article>
 
@@ -192,7 +217,7 @@
   <div id="disqus_thread"></div>
   <script type="text/javascript">
     var disqus_shortname  = 'qimublog';
-    var disqus_identifier = '/code/2018/01/03/lda-as-a-case-study';
+    var disqus_identifier = '/code/2018/01/23/coordinate-descent-everywhere';
 
     (function() {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
