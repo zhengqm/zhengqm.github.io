@@ -237,11 +237,12 @@
   <li>把运算结果从GPU搬运回CPU中</li>
 </ul>
 
-<p>接下来我们以<code class="highlighter-rouge">samples</code>中的<code class="highlighter-rouge">vectorAdd</code>为例，说明这一流程：</p>
+<p>Cuda样例代码中的<code class="highlighter-rouge">vectorAdd</code>完成的任务是对长为<code class="highlighter-rouge">numElements</code>的两个数组<code class="highlighter-rouge">h_A</code>、<code class="highlighter-rouge">h_B</code>进行对应元素加合，并将结果存入<code class="highlighter-rouge">h_C</code>中。接下来我们以<code class="highlighter-rouge">vectorAdd</code>为例，说明这一流程：</p>
 
 <ul>
   <li>首先是把CPU数据搬运到GPU中
     <div class="highlighter-rouge"><pre class="highlight"><code>cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
+cudaMemcpy(d_B, h_B, size, cudaMemcpyHostToDevice);
 </code></pre>
     </div>
   </li>
@@ -258,24 +259,21 @@ vectorAdd(const float *A, const float *B, float *C, int numElements)
 }
 </code></pre>
     </div>
-    <p>做的事情就是每个thread负责根据自己所在的thread block及threadIdx计算出自己对应的数组下标，并对这一下标对应的元素完成一次加合计算。</p>
+    <p>做的事情就是每个thread负责根据自己所在的thread block及threadIdx计算出自己所应处理的数组下标，并对这一下标对应的元素完成一次加合计算。</p>
   </li>
-  <li>接下来我们启动kernel，其中<code class="highlighter-rouge">&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;&gt;&gt;</code>表示我们需要<code class="highlighter-rouge">blocksPerGrid</code>个thread block，这个thread block中包含<code class="highlighter-rouge">threadsPerBlock</code>个thread.</li>
+  <li>接下来我们启动kernel，其中<code class="highlighter-rouge">&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;&gt;&gt;</code>指定了thread block数量及每个block中的thread数量。
+    <div class="highlighter-rouge"><pre class="highlight"><code>vectorAdd&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;&gt;&gt;(d_A, d_B, d_C, numElements);
+</code></pre>
+    </div>
+  </li>
+  <li>最后我们把运算结果搬运回CPU中。
+    <div class="highlighter-rouge"><pre class="highlight"><code>cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost);
+</code></pre>
+    </div>
+  </li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>vectorAdd&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;&gt;&gt;(d_A, d_B, d_C, numElements);
-</code></pre>
-</div>
-
-<ul>
-  <li>最后我们把运算结果搬运回CPU中。</li>
-</ul>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost);
-</code></pre>
-</div>
-
-<p>一个cuda程序最重要的部分就完成了。完整代码中还包含了内存的分配、cuda调用的错误检查，完整代码可见cuda安装目录下的<code class="highlighter-rouge">samples/0_Simple/vectorAdd</code>。</p>
+<p>一个cuda程序最重要的部分就完成了。完整代码中还包含了内存的分配、cuda调用的错误检查等内容，完整代码可见cuda安装目录下的<code class="highlighter-rouge">samples/0_Simple/vectorAdd</code>。</p>
 
 <h2 id="一些需要留意的地方">一些需要留意的地方</h2>
 
