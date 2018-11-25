@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta property="wb:webmaster" content="0cd97aa41a31b4c7" />
+    <title>Cuda编程101 &#8211; Qimu's Code and Life | 郑淇木的代码及日常</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Cuda编程基本概念&amp;编程模型">
+    <meta name="author" content="Qimu Zheng">
+    <meta name="keywords" content="郑淇木 博客  Qimu Zheng">
+    <!--meta name="keywords" content="Code"-->
+    <link rel="canonical" href="https://zhengqm.github.io/code/2018/11/25/cuda-programming-101/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css" type="text/css">
+
+    <!-- Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    
+
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Cuda编程101">
+    <meta property="og:description" content="郑淇木的博客  Qimu Zheng's Blog">
+    <meta property="og:url" content="https://zhengqm.github.io/code/2018/11/25/cuda-programming-101/">
+    <meta property="og:site_name" content="Qimu's Code and Life | 郑淇木的代码及日常">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      CommonHTML: {
+        scale: 85
+      }
+    });
+    </script>
+    <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+        
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-64116908-1']);
+          _gaq.push(['_trackPageview']);
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
+        
+        <div style="display:none">
+            <script src="https://s22.cnzz.com/z_stat.php?id=1272143564&web_id=1272143564" language="JavaScript"></script>
+        </div>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+    // google adsense
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-7978345239059065",
+    enable_page_level_ads: true
+  });
+</script>
+
+
+</head>
+
+<body class="animated fade-in-down">
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="/" class="site-title">Qimu's Code and Life | 郑淇木的代码及日常</a>
+      <nav class="site-nav right">
+        <a href="/about/">About</a>
+<!--a href="/contact/">Contact</a-->
+
+      </nav>
+      <div class="clearfix"></div>
+      
+        <div class="social-icons">
+  <div class="left">
+    
+      <a class="fa fa-weibo" href="http://weibo.com/2172274364"></a>
+    
+    
+      <a class="fa fa-github" href="https://github.com/zhengqm"></a>
+    
+    
+    <!-- a class="fa fa-rss" href="/feed.xml"></a-->
+    
+      <a class="fa fa-twitter" href="https://twitter.com/zheng_qm"></a>
+    
+    
+
+    
+      <a class="fa fa-linkedin" href="https://www.linkedin.com/in/qimu-zheng-6b72a484"></a>
+    
+    
+  </div>
+  <div class="right">
+    
+    
+    
+  </div>
+</div>
+<div class="clearfix"></div>
+
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h2>Cuda编程101</h2>
+  <span class="post-meta">Nov 25, 2018</span><br>
+  
+  <span class="post-meta small">1 minute read</span>
+</div>
+
+<article class="post-content">
+  <h2 id="基本想法">基本想法</h2>
+
+<p>在介绍编码相关内容之前，一个更重要的话题是什么类型的问题适合用GPU进行解决。</p>
+
+<p>GPU于CPU相比，有着惊人的核数、运算单元及内存带宽。对于给定问题，如果有办法把它分解为多个独立的子问题并行解决，那么GPU很有可能提供比CPU更好的性能。所谓“独立”，指的是所分解的子问题满足：</p>
+
+<ul>
+  <li>子问题之间尽可能避免同步</li>
+  <li>子问题之间尽可能依赖使用全局内存同步状态</li>
+  <li>子问题之间尽可能避免同步关系</li>
+</ul>
+
+<p>矩阵相乘就是一个很好的例子，对矩阵相乘结果中各个元素的计算之间没有任何依赖关系，能够很好地通过GPU进行并行。当然对于一些问题，可能没办法立刻想出并行的办法，但是却存在可高效并行的问题分解办法，比方说：</p>
+
+<p>(思考题)</p>
+<ul>
+  <li>归并两个有序数组</li>
+  <li>对一个数组求前缀和</li>
+</ul>
+
+<p>对于手头的问题，如果能够顺利对问题进行分解，那么就有可能利用GPU提供的硬件特性及编程模型对其进行高效解决。</p>
+
+<h2 id="编程模型">编程模型</h2>
+
+<h4 id="硬件视角">硬件视角</h4>
+<ul>
+  <li>一块GPU上由多个Streaming Multiprocessors组成，简称SM。</li>
+  <li>每个SM中包含多个core，即实际完成计算的单元。</li>
+  <li>如下图所示，在一块1080ti上有28个SM，每个SM上有128个core，合计3584个cuda core。</li>
+</ul>
+
+<p><img src="/images/GTX1080TiBlockDiagram.png" alt="" /></p>
+
+<h4 id="编程视角">编程视角</h4>
+
+<ul>
+  <li>程序员编写一个在GPU由多个thread并行执行的函数，并从CPU代码对其调用。这样的函数我们将其称为一个kernel。</li>
+  <li>多个GPU thread组成一个thread block</li>
+  <li>对于一个kernel函数，程序员来指定启动多少个thread block，每个thread block里有多少thread</li>
+  <li>每个thread能够获取自己在哪个block中，以及自己是本block的第几个thread。对于一个并行处理任务，thread可根据这些信息确定自己应处理哪部分子问题。</li>
+</ul>
+
+<h4 id="执行视角">执行视角</h4>
+
+<ul>
+  <li>每个thread block会被调度到其中一个SM上执行</li>
+  <li>对于一个thread block中的各个thread，每32个thread组成一个warp，SM以warp为单位进行调度。在一个warp中，所有thread执行同一个指令流，即Single Instruction Multiple Thread(SIMT)。如果执行过程中有分支语句，那么执行不同分支的thread需要互相等待。比方说对于下列语句，任意时刻同一个warp中只能有一半的thread进行操作，而不是各自独立执行自己所在的分支。在写kernel时，不当的分支语句可能会导致性能下降。</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>if (threadIdx.x % 2 == 0) {
+    // Some work
+} else {
+    // Other work
+}
+</code></pre>
+</div>
+
+<blockquote>
+  <p>说点别的</p>
+
+  <p>32个thread组成的调度单元为什么叫warp？原因是thread有线的意思，而warp是织布机相关的一个把多个thread固定注的装置，于是就取了这个比喻：
+<img width="50%" src="/images/warp.jpg" /></p>
+</blockquote>
+
+<h4 id="资源限制">资源限制</h4>
+
+<p>就像写CPU代码时会受到CPU核数、内存空间、访存速度的限制一样，GPU编程模型里也需要留意相关的资源限制：</p>
+
+<ul>
+  <li>每个thread block中的thread数量，1080ti的上限是1024</li>
+  <li>启动kernel时thread block数量（这个涉及到所起的thread block可能是多维的情况，先暂时认为是2147483647吧）</li>
+  <li>每个SM能同时处理的thread block数量，1080ti的上限是32</li>
+  <li>Shared memory的大小，1080ti的上限是96kB</li>
+  <li>GPU的访存速度，1080ti上限是484GB/s，如果真的受到了这个限制说明代码写得非常好了</li>
+  <li>…（还有好多）</li>
+</ul>
+
+<h2 id="来点代码">来点代码</h2>
+
+<p>CUDA编程中的常见流程是：</p>
+
+<ul>
+  <li>把CPU数据搬运到GPU中</li>
+  <li>写一个kernel定义我们想完成的计算</li>
+  <li>启动kernel</li>
+  <li>把运算结果从GPU搬运回CPU中</li>
+</ul>
+
+<p>接下来我们以<code class="highlighter-rouge">samples</code>中的<code class="highlighter-rouge">vectorAdd</code>为例，说明这一流程：</p>
+
+<ul>
+  <li>首先是把CPU数据搬运到GPU中
+    <div class="highlighter-rouge"><pre class="highlight"><code>cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
+</code></pre>
+    </div>
+  </li>
+  <li>然后我们定义我们的加合计算
+    <div class="highlighter-rouge"><pre class="highlight"><code>__global__ void
+vectorAdd(const float *A, const float *B, float *C, int numElements)
+{
+  int i = blockDim.x * blockIdx.x + threadIdx.x;
+
+  if (i &lt; numElements)
+  {
+      C[i] = A[i] + B[i];
+  }
+}
+</code></pre>
+    </div>
+    <p>做的事情就是每个thread负责根据自己所在的thread block及threadIdx计算出自己对应的数组下标，并对这一下标对应的元素完成一次加合计算。</p>
+  </li>
+  <li>接下来我们启动kernel，其中<code class="highlighter-rouge">&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;&gt;&gt;</code>表示我们需要<code class="highlighter-rouge">blocksPerGrid</code>个thread block，这个thread block中包含<code class="highlighter-rouge">threadsPerBlock</code>个thread.</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>vectorAdd&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;&gt;&gt;(d_A, d_B, d_C, numElements);
+</code></pre>
+</div>
+
+<ul>
+  <li>最后我们把运算结果搬运回CPU中。</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost);
+</code></pre>
+</div>
+
+<p>一个cuda程序最重要的部分就完成了。完整代码中还包含了内存的分配、cuda调用的错误检查，完整代码可见cuda安装目录下的<code class="highlighter-rouge">samples/0_Simple/vectorAdd</code>。</p>
+
+<h2 id="一些需要留意的地方">一些需要留意的地方</h2>
+
+<ul>
+  <li>kernel的执行是异步的，启动后会立即返回CPU代码中。如果计时的话会发现时间极短，其实这个时间仅仅是kernel启动的时间。</li>
+  <li>尽管kernel执行是异步的，然而cudaMemcpy又是阻塞的。</li>
+  <li>样例代码中的一次从CPU到GPU的cudaMemcpy调用其实完成了两次内存拷贝，一次从CPU原内存拷贝到了CPU中一段page-lock内存中，再从这段内存拷贝到GPU内存。</li>
+</ul>
+
+<h2 id="更多话题">更多话题</h2>
+
+<ul>
+  <li>GPU的内存层级</li>
+  <li>GPU访存pattern对性能的影响</li>
+  <li>GPU的分支语句对性能的影响</li>
+  <li>GPU中的同步操作、原子操作</li>
+  <li>CPU、GPU间数据传输，PCIe，page-lock内存</li>
+  <li>CUDA的debugger及profiler</li>
+</ul>
+
+<h2 id="思考题答案">思考题答案</h2>
+
+<ul>
+  <li>归并两个有序数组:对于数组长度为n、m的有序数组及t个thread，可以对长为n的数组进行t等分，并对每一子数组的起终点，二分找到数组m中对应的上界及下界，并基于此进行并行归并。</li>
+  <li>对一个数组求前缀和:
+<a href="https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch39.html">Parallel Prefix Sum (Scan) with CUDA</a></li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+
+<ul>
+  <li><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">CUDA C Programming Guide</a></li>
+  <li><a href="https://classroom.udacity.com/courses/cs344">Udacity Intro to Parallel Programming</a></li>
+</ul>
+
+</article>
+
+
+
+
+
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_shortname  = 'qimublog';
+    var disqus_identifier = '/code/2018/11/25/cuda-programming-101';
+
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+  <div class="p2 wrap">
+    <div class="measure mt1 center">
+      <small>
+        使用<a href="http://jekyllrb.com/">jekyll</a>和<a href="https://github.com/johnotander/pixyll">pixyll</a>搭建。
+      </small>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

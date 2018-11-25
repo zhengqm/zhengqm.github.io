@@ -7,6 +7,175 @@
     <atom:link href="https://zhengqm.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Cuda编程101</title>
+        <description>&lt;h2 id=&quot;基本想法&quot;&gt;基本想法&lt;/h2&gt;
+
+&lt;p&gt;在介绍编码相关内容之前，一个更重要的话题是什么类型的问题适合用GPU进行解决。&lt;/p&gt;
+
+&lt;p&gt;GPU于CPU相比，有着惊人的核数、运算单元及内存带宽。对于给定问题，如果有办法把它分解为多个独立的子问题并行解决，那么GPU很有可能提供比CPU更好的性能。所谓“独立”，指的是所分解的子问题满足：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;子问题之间尽可能避免同步&lt;/li&gt;
+  &lt;li&gt;子问题之间尽可能依赖使用全局内存同步状态&lt;/li&gt;
+  &lt;li&gt;子问题之间尽可能避免同步关系&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;矩阵相乘就是一个很好的例子，对矩阵相乘结果中各个元素的计算之间没有任何依赖关系，能够很好地通过GPU进行并行。当然对于一些问题，可能没办法立刻想出并行的办法，但是却存在可高效并行的问题分解办法，比方说：&lt;/p&gt;
+
+&lt;p&gt;(思考题)&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;归并两个有序数组&lt;/li&gt;
+  &lt;li&gt;对一个数组求前缀和&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;对于手头的问题，如果能够顺利对问题进行分解，那么就有可能利用GPU提供的硬件特性及编程模型对其进行高效解决。&lt;/p&gt;
+
+&lt;h2 id=&quot;编程模型&quot;&gt;编程模型&lt;/h2&gt;
+
+&lt;h4 id=&quot;硬件视角&quot;&gt;硬件视角&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;一块GPU上由多个Streaming Multiprocessors组成，简称SM。&lt;/li&gt;
+  &lt;li&gt;每个SM中包含多个core，即实际完成计算的单元。&lt;/li&gt;
+  &lt;li&gt;如下图所示，在一块1080ti上有28个SM，每个SM上有128个core，合计3584个cuda core。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/GTX1080TiBlockDiagram.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;编程视角&quot;&gt;编程视角&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;程序员编写一个在GPU由多个thread并行执行的函数，并从CPU代码对其调用。这样的函数我们将其称为一个kernel。&lt;/li&gt;
+  &lt;li&gt;多个GPU thread组成一个thread block&lt;/li&gt;
+  &lt;li&gt;对于一个kernel函数，程序员来指定启动多少个thread block，每个thread block里有多少thread&lt;/li&gt;
+  &lt;li&gt;每个thread能够获取自己在哪个block中，以及自己是本block的第几个thread。对于一个并行处理任务，thread可根据这些信息确定自己应处理哪部分子问题。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;执行视角&quot;&gt;执行视角&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;每个thread block会被调度到其中一个SM上执行&lt;/li&gt;
+  &lt;li&gt;对于一个thread block中的各个thread，每32个thread组成一个warp，SM以warp为单位进行调度。在一个warp中，所有thread执行同一个指令流，即Single Instruction Multiple Thread(SIMT)。如果执行过程中有分支语句，那么执行不同分支的thread需要互相等待。比方说对于下列语句，任意时刻同一个warp中只能有一半的thread进行操作，而不是各自独立执行自己所在的分支。在写kernel时，不当的分支语句可能会导致性能下降。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;if (threadIdx.x % 2 == 0) {
+    // Some work
+} else {
+    // Other work
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;说点别的&lt;/p&gt;
+
+  &lt;p&gt;32个thread组成的调度单元为什么叫warp？原因是thread有线的意思，而warp是织布机相关的一个把多个thread固定注的装置，于是就取了这个比喻：
+&lt;img width=&quot;50%&quot; src=&quot;/images/warp.jpg&quot; /&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;资源限制&quot;&gt;资源限制&lt;/h4&gt;
+
+&lt;p&gt;就像写CPU代码时会受到CPU核数、内存空间、访存速度的限制一样，GPU编程模型里也需要留意相关的资源限制：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;每个thread block中的thread数量，1080ti的上限是1024&lt;/li&gt;
+  &lt;li&gt;启动kernel时thread block数量（这个涉及到所起的thread block可能是多维的情况，先暂时认为是2147483647吧）&lt;/li&gt;
+  &lt;li&gt;每个SM能同时处理的thread block数量，1080ti的上限是32&lt;/li&gt;
+  &lt;li&gt;Shared memory的大小，1080ti的上限是96kB&lt;/li&gt;
+  &lt;li&gt;GPU的访存速度，1080ti上限是484GB/s，如果真的受到了这个限制说明代码写得非常好了&lt;/li&gt;
+  &lt;li&gt;…（还有好多）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;来点代码&quot;&gt;来点代码&lt;/h2&gt;
+
+&lt;p&gt;CUDA编程中的常见流程是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;把CPU数据搬运到GPU中&lt;/li&gt;
+  &lt;li&gt;写一个kernel定义我们想完成的计算&lt;/li&gt;
+  &lt;li&gt;启动kernel&lt;/li&gt;
+  &lt;li&gt;把运算结果从GPU搬运回CPU中&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;接下来我们以&lt;code class=&quot;highlighter-rouge&quot;&gt;samples&lt;/code&gt;中的&lt;code class=&quot;highlighter-rouge&quot;&gt;vectorAdd&lt;/code&gt;为例，说明这一流程：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;首先是把CPU数据搬运到GPU中
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;然后我们定义我们的加合计算
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;__global__ void
+vectorAdd(const float *A, const float *B, float *C, int numElements)
+{
+  int i = blockDim.x * blockIdx.x + threadIdx.x;
+
+  if (i &amp;lt; numElements)
+  {
+      C[i] = A[i] + B[i];
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+    &lt;p&gt;做的事情就是每个thread负责根据自己所在的thread block及threadIdx计算出自己对应的数组下标，并对这一下标对应的元素完成一次加合计算。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;接下来我们启动kernel，其中&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;&amp;lt;&amp;lt;blocksPerGrid, threadsPerBlock&amp;gt;&amp;gt;&amp;gt;&lt;/code&gt;表示我们需要&lt;code class=&quot;highlighter-rouge&quot;&gt;blocksPerGrid&lt;/code&gt;个thread block，这个thread block中包含&lt;code class=&quot;highlighter-rouge&quot;&gt;threadsPerBlock&lt;/code&gt;个thread.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vectorAdd&amp;lt;&amp;lt;&amp;lt;blocksPerGrid, threadsPerBlock&amp;gt;&amp;gt;&amp;gt;(d_A, d_B, d_C, numElements);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;最后我们把运算结果搬运回CPU中。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;一个cuda程序最重要的部分就完成了。完整代码中还包含了内存的分配、cuda调用的错误检查，完整代码可见cuda安装目录下的&lt;code class=&quot;highlighter-rouge&quot;&gt;samples/0_Simple/vectorAdd&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;一些需要留意的地方&quot;&gt;一些需要留意的地方&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;kernel的执行是异步的，启动后会立即返回CPU代码中。如果计时的话会发现时间极短，其实这个时间仅仅是kernel启动的时间。&lt;/li&gt;
+  &lt;li&gt;尽管kernel执行是异步的，然而cudaMemcpy又是阻塞的。&lt;/li&gt;
+  &lt;li&gt;样例代码中的一次从CPU到GPU的cudaMemcpy调用其实完成了两次内存拷贝，一次从CPU原内存拷贝到了CPU中一段page-lock内存中，再从这段内存拷贝到GPU内存。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;更多话题&quot;&gt;更多话题&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;GPU的内存层级&lt;/li&gt;
+  &lt;li&gt;GPU访存pattern对性能的影响&lt;/li&gt;
+  &lt;li&gt;GPU的分支语句对性能的影响&lt;/li&gt;
+  &lt;li&gt;GPU中的同步操作、原子操作&lt;/li&gt;
+  &lt;li&gt;CPU、GPU间数据传输，PCIe，page-lock内存&lt;/li&gt;
+  &lt;li&gt;CUDA的debugger及profiler&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;思考题答案&quot;&gt;思考题答案&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;归并两个有序数组:对于数组长度为n、m的有序数组及t个thread，可以对长为n的数组进行t等分，并对每一子数组的起终点，二分找到数组m中对应的上界及下界，并基于此进行并行归并。&lt;/li&gt;
+  &lt;li&gt;对一个数组求前缀和:
+&lt;a href=&quot;https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch39.html&quot;&gt;Parallel Prefix Sum (Scan) with CUDA&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;reference&quot;&gt;Reference&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html&quot;&gt;CUDA C Programming Guide&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://classroom.udacity.com/courses/cs344&quot;&gt;Udacity Intro to Parallel Programming&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sun, 25 Nov 2018 00:00:00 +0800</pubDate>
+        <link>https://zhengqm.github.io/code/2018/11/25/cuda-programming-101/</link>
+        <guid isPermaLink="true">https://zhengqm.github.io/code/2018/11/25/cuda-programming-101/</guid>
+      </item>
+    
+      <item>
         <title>到处都是坐标下降</title>
         <description>&lt;h2 id=&quot;坐标下降是坐标下降&quot;&gt;坐标下降是坐标下降&lt;/h2&gt;
 
