@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta property="wb:webmaster" content="0cd97aa41a31b4c7" />
+    <title>Cuda编程102 &#8211; Qimu's Code and Life | 郑淇木的代码及日常</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Cuda程序性能提升">
+    <meta name="author" content="Qimu Zheng">
+    <meta name="keywords" content="郑淇木 博客  Qimu Zheng">
+    <!--meta name="keywords" content="Code"-->
+    <link rel="canonical" href="https://zhengqm.github.io/code/2018/12/02/cuda-programming-102/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css" type="text/css">
+
+    <!-- Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    
+
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Cuda编程102">
+    <meta property="og:description" content="郑淇木的博客  Qimu Zheng's Blog">
+    <meta property="og:url" content="https://zhengqm.github.io/code/2018/12/02/cuda-programming-102/">
+    <meta property="og:site_name" content="Qimu's Code and Life | 郑淇木的代码及日常">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      CommonHTML: {
+        scale: 85
+      }
+    });
+    </script>
+    <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+        
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-64116908-1']);
+          _gaq.push(['_trackPageview']);
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
+        
+        <div style="display:none">
+            <script src="https://s22.cnzz.com/z_stat.php?id=1272143564&web_id=1272143564" language="JavaScript"></script>
+        </div>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+    // google adsense
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-7978345239059065",
+    enable_page_level_ads: true
+  });
+</script>
+
+
+</head>
+
+<body class="animated fade-in-down">
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="/" class="site-title">Qimu's Code and Life | 郑淇木的代码及日常</a>
+      <nav class="site-nav right">
+        <a href="/about/">About</a>
+<!--a href="/contact/">Contact</a-->
+
+      </nav>
+      <div class="clearfix"></div>
+      
+        <div class="social-icons">
+  <div class="left">
+    
+      <a class="fa fa-weibo" href="http://weibo.com/2172274364"></a>
+    
+    
+      <a class="fa fa-github" href="https://github.com/zhengqm"></a>
+    
+    
+    <!-- a class="fa fa-rss" href="/feed.xml"></a-->
+    
+      <a class="fa fa-twitter" href="https://twitter.com/zheng_qm"></a>
+    
+    
+
+    
+      <a class="fa fa-linkedin" href="https://www.linkedin.com/in/qimu-zheng-6b72a484"></a>
+    
+    
+  </div>
+  <div class="right">
+    
+    
+    
+  </div>
+</div>
+<div class="clearfix"></div>
+
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h2>Cuda编程102</h2>
+  <span class="post-meta">Dec 2, 2018</span><br>
+  
+  <span class="post-meta small">3 minute read</span>
+</div>
+
+<article class="post-content">
+  <p>Cuda为程序员使用GPU进行异构计算提供了抽象良好的编程模型。但正如同编写CPU程序时需注意局部性、缓存等硬件特性以获得更好地性能，为了更好地挖掘GPU的性能，我们在GPU程序中也需注意GPU特有的访存、执行、数据传输等方面的特性并进行相应的优化。</p>
+
+<h2 id="gpu的内存层级">GPU的内存层级</h2>
+
+<p>和存在register、cache、DRAM这样的内存层级的CPU一样，GPU上也有着速度、大小各异的存储层级，由快至慢分别是：</p>
+
+<ul>
+  <li>Register Files</li>
+  <li>L1 / Shared Memory*</li>
+  <li>L2 Cache</li>
+  <li>Global Memory*</li>
+</ul>
+
+<p>和CPU存在显著不同的是，在CPU程序中，通常只有DRAM是向程序员暴露的，如何使用各级缓存对程序中的变量进行缓存均由硬件决定；即使有<code class="highlighter-rouge">register</code>关键字，也只是一个hint而不是直接指定。而在GPU程序中，除了像CPU一样DRAM向程序员暴露之外，GPU中的L1/shared memory也是暴露给程序员使用的，即程序员可指定哪些数据放置于空间较大而延迟较高的global memory中，哪些数据放置于空间较小而延迟较低的shared memory中。</p>
+
+<p>这一显著不同为程序员提供了重要的性能改进空间，如果能将占用空间较小而访问频率较高的数据存储于shared memory中，将可能显著改善程序性能。</p>
+
+<p>举个例子，我们实现了两个完成M维向量点乘M*N维矩阵的kernel，其中<code class="highlighter-rouge">multiply_without_shared</code>直接访问global memory，而<code class="highlighter-rouge">multiply_with_shared</code>则在每个threadBlock内部将尺寸较小的向量拷贝至shared memory中：</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">__global__</span> <span class="kt">void</span>
+<span class="nf">multiply_without_shared</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">M</span> <span class="o">+</span> <span class="n">idx</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">__global__</span> <span class="kt">void</span>
+<span class="nf">multiply_with_shared</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">extern</span> <span class="n">__shared__</span> <span class="kt">float</span> <span class="n">shared_x</span><span class="p">[];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">shared_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">__syncthreads</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">shared_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">M</span> <span class="o">+</span> <span class="n">idx</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>在我的机器上，当设M=256，N=1000000时，<code class="highlighter-rouge">multiply_with_shared</code>相比于<code class="highlighter-rouge">multiply_without_shared</code>提供了4x的提速比。</p>
+
+<h2 id="gpu的分支语句对性能的影响">GPU的分支语句对性能的影响</h2>
+
+<p>对于一个thread block中的各个thread，每32个thread组成一个warp，SM以warp为单位进行调度。在一个warp中，所有thread执行同一个指令流，即Single Instruction Multiple Thread(SIMT)。如果执行过程中有分支语句，那么执行不同分支的thread需要互相等待。比方说对于下列语句：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>if (threadIdx.x % 2 == 0) {
+    // Some work
+} else {
+    // Other work
+}
+</code></pre>
+</div>
+<p>任意时刻同一个warp中只能有一半的thread进行操作，而不是各自独立执行自己所在的分支，可能会导致速度下降至1/2。</p>
+
+<p>那么这样的语句，大概会导致速度下降多少呢？</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>switch (threadIdx.x) {
+    case 0: ...
+    case 1: ...
+    ...
+    case 126: ...
+    case 127: ...
+}
+</code></pre>
+</div>
+<p>答案是1/128？不对，应该是1/32，因为warp的组成是32个thread，这样的分支最多导致32叉的分叉。</p>
+
+<h2 id="gpu访存pattern对性能的影响">GPU访存pattern对性能的影响</h2>
+
+<p>如前文所提到的，一个warp中的32个thread同时执行同一条instruction。当这32个thread同时执行一条内存读取指令时，GPU将发起一个或多个memory transaction。若这32个thread读取的是一段连续的内存，GPU将有机会在一个memory transaction中满足多个thread中的内存读取请求，从而减少memory transaction的数量且提高内存带宽的有效使用率。这种在连续thread中读取连续内存空间以提高内存带宽使用率的访存优化被称为memory coalescing。</p>
+
+<p>举个例子，我们实现了两个实现向量加法的kernel，其中<code class="highlighter-rouge">add_coalesced</code>的相邻thread访问连续内存，而<code class="highlighter-rouge">add_striped</code>则跳跃访问内存：</p>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">__global__</span> <span class="kt">void</span>
+<span class="nf">add_coalesced</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">C</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="n">C</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+<span class="p">}</span>
+
+
+<span class="n">__global__</span> <span class="kt">void</span>
+<span class="nf">add_striped</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">C</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">%</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mi">32</span> <span class="o">+</span> <span class="p">(</span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">/</span> <span class="mi">32</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="n">C</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>在我的机器上，当设N=60M时，<code class="highlighter-rouge">add_coalesced</code>的执行速度是<code class="highlighter-rouge">add_striped</code>的3.5倍。</p>
+
+<h2 id="cpugpu间数据传输pciepage-lock内存">CPU、GPU间数据传输，PCIe，page-lock内存</h2>
+
+<p>CPU、GPU间的数据传输通过PCIe进行传输，目前服务器上常见的16x接口的理论带宽上限是16GB/s。CPU、GPU之间的所有数据传输均通过DMA完成，这就要求CPU侧的内存必须是page-lock的，而通常情况下我们向系统申请得到的内存均是pageable的，这就导致了当我们调用<code class="highlighter-rouge">cudaMemcpy</code>从CPU向GPU传输数据时，<code class="highlighter-rouge">cudaMemcpy</code>将执行以下判断：</p>
+
+<ul>
+  <li>若CPU内存是cuda runtime认为page-lock的，则直接发起DMA传输</li>
+  <li>若CPU内存是普通的pageable内存，则分配一段page-lock内存，将数据进行一次内存到内存的拷贝，再发起DMA传输</li>
+</ul>
+
+<p>所谓“cuda runtime认为page-lock”的内存，是指该段内存由<code class="highlighter-rouge">cudaMallocHost</code>得到，或是一段普通内存但是曾对其调用过<code class="highlighter-rouge">cudaHostRegister</code>。</p>
+
+<p>在我的机器上实测发现，对于相同大小的内存，对pageable内存调用<code class="highlighter-rouge">cudaMemcpy</code>的运行时间是对pagelock内存调用<code class="highlighter-rouge">cudaMemcpy</code>的3倍，即超过60%的时间花在了从原内存到page-lock内存的拷贝上。在这点上不注意的话，可能会得到PCIe的实际带宽远低于预期的结论，而真正的原因是有大量的时间被花在了将数据拷贝到page-lock内存的过程上。</p>
+
+<p>值得一提的是cudaMallocHost可谓是惊人的慢。引用一个性能对比，如下图所示，malloc、cudaMallocHost分配相同大小内存的速度差异可以达到4个数量级。此外，分配过多的page-lock内存也会导致系统调度更加吃力并影响系统的性能。</p>
+
+<p><img src="/images/malloc_time_per_call.png" alt="" /></p>
+
+<p>所以，对于CPU、GPU间数据传输这个问题，比较好的做法是是：</p>
+<ul>
+  <li>尽可能少传，宁可用计算换传输量</li>
+  <li>如果使用了<code class="highlighter-rouge">cudaMallocHost</code>，尽可能重复使用以降低平均分配成本</li>
+</ul>
+
+<h2 id="总结">总结</h2>
+
+<p>本文讨论了影响GPU程序执行性能的几个话题，涉及访存、执行、数据传输等多个方面，这些话题存在的原因来自于GPU、CPU架构之间的显著不同。尽管Cuda提供了抽象良好的编程模型，为了更好地挖掘GPU的性能，我们在编码时需要将GPU的架构纳入考虑并对上述话题进行留意。</p>
+
+<h2 id="引用">引用</h2>
+
+<ul>
+  <li><a href="https://www.cs.virginia.edu/~mwb7w/cuda_support/memory_management_overhead.html">Cuda Memory Allocation Overhead</a></li>
+</ul>
+
+
+</article>
+
+
+
+
+
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_shortname  = 'qimublog';
+    var disqus_identifier = '/code/2018/12/02/cuda-programming-102';
+
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+  <div class="p2 wrap">
+    <div class="measure mt1 center">
+      <small>
+        使用<a href="http://jekyllrb.com/">jekyll</a>和<a href="https://github.com/johnotander/pixyll">pixyll</a>搭建。
+      </small>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
