@@ -8,7 +8,13 @@
     
       <item>
         <title>Cuda编程102</title>
-        <description>&lt;p&gt;Cuda为程序员使用GPU进行异构计算提供了抽象良好的编程模型。但正如同编写CPU程序时需注意局部性、缓存等硬件特性以获得更好地性能，为了更好地挖掘GPU的性能，我们在GPU程序中也需注意GPU特有的访存、执行、数据传输等方面的特性并进行相应的优化。&lt;/p&gt;
+        <description>&lt;p&gt;系列文章：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/code/2018/11/25/cuda-programming-101/&quot;&gt;Cuda编程101&lt;/a&gt;：Cuda编程的基本概念及编程模型&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/code/2018/12/02/cuda-programming-102/&quot;&gt;Cuda编程102&lt;/a&gt;：Cuda程序性能相关话题&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Cuda为程序员使用GPU进行异构计算提供了抽象良好的编程模型。但正如同编写CPU程序时需注意局部性、缓存等硬件特性以获得更好地性能，为了更好地挖掘GPU的性能，我们在GPU程序中也需注意GPU特有的访存、执行、数据传输等方面的特性并进行相应的优化。&lt;/p&gt;
 
 &lt;h2 id=&quot;gpu的内存层级&quot;&gt;GPU的内存层级&lt;/h2&gt;
 
@@ -149,7 +155,13 @@
     
       <item>
         <title>Cuda编程101</title>
-        <description>&lt;h2 id=&quot;基本想法&quot;&gt;基本想法&lt;/h2&gt;
+        <description>&lt;p&gt;系列文章：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/code/2018/11/25/cuda-programming-101/&quot;&gt;Cuda编程101&lt;/a&gt;：Cuda编程的基本概念及编程模型&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/code/2018/12/02/cuda-programming-102/&quot;&gt;Cuda编程102&lt;/a&gt;：Cuda程序性能相关话题&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;基本想法&quot;&gt;基本想法&lt;/h2&gt;
 
 &lt;p&gt;在介绍编码相关内容之前，一个更重要的话题是什么类型的问题适合用GPU进行解决。&lt;/p&gt;
 
