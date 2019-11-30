@@ -1,0 +1,14 @@
+- name: 编程
+  desc: |
+    应用、系统、硬件及其他
+  tag_name: code
+
+- name: 算法
+  desc: |
+    特征、算法、优化及其他
+  tag_name: algo
+
+- name: 其他
+  desc: |
+    日常、生活
+  tag_name: life

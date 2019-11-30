@@ -1,0 +1,40 @@
+<footer>
+  <div id="bio">
+    <div id="bio-image">
+      <img src="/static/mugshot.jpg" alt="Qimu Zheng">
+    </div>
+
+    <div id="bio-text">
+      <p>Hi. 我是<b>郑淇木</b>.</p>
+      <p>目前居住在北京，在<a href="https://www.4paradigm.com/">第四范式</a>任机器学习系统工程师。</p>
+
+      <div id="bio-social">
+        {% include social.html %}
+      </div>
+    </div>
+  </div>
+
+  {% unless page.skip_related %}
+  <aside>
+    <h3>更多内容</h3>
+    <ul class="posts">
+      {% if page.tags %}
+      {% assign sn = page.tags.first %}
+      {% for post in site.tags[sn] limit:3 %}
+      {% unless page.title == post.title %}
+      <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+      {% endunless %}
+      {% endfor %}
+      {% else %}
+      {% for post in site.related_posts limit:3 %}
+      {% unless page.title == post.title %}
+      <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+      {% endunless %}
+      {% endfor %}
+      {% endif %}
+    </ul>
+  </aside>
+  {% endunless %}
+</footer>
+
+{% include fine-print.html %}
