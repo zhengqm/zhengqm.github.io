@@ -1,0 +1,21 @@
+url: https://zhengqm.github.io
+lsi: false
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+exclude:
+  ["CNAME", "README.md", "Rakefile", "generate.rb", "Gemfile", "Gemfile.lock"]
+include: ["_pages"]
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jemoji
+author:
+  name: Zheng Qimu
+  email: zheng.qm@163.com
+  url: zhengqm.github.io
+title: Qimu's Blog
+feed:
+  path: atom.xml
