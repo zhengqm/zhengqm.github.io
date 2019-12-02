@@ -10,7 +10,7 @@ tags:
 
 # Introduction
 
-### Background
+## Background
 
 我所在的小组的研究领域是软件开发数据挖掘，在各种的软件开发数据中，最基础且最重要的数据是软件项目的代码库，其中包含了项目的所有代码文件、代码的所有版本、代码提交者的想关信息。我们小组从互联网的各大开源社区、代码托管网站爬取了超过20万个软件项目的代码库，其中既包含 Apache 、 Mozilla 这种大型社区中的项目，也包含托管于 Github 、 Bitbucket 等网站上的大大小小的项目。在此基础上，小组的师兄们对这些项目的元信息进行了抽取，并将其存储于 Mongodb 中，对于一个项目我们存储了项目的:
 
@@ -45,12 +45,12 @@ tags:
 
 然而尽管我们有了大量数据，也提取了这些数据的元信息，但是这些数据一直静静的躺在服务器的磁盘上，并没有被很好利用。其中一个重要的原因是我们缺少一个方便好用的搜索工具对数据进行探索。
 
-### Instant Search
+## Instant Search
 
 而所谓即时搜索(Instant search)，就是在使用者键入关键字的同时即时返回搜索结果，最为常见的例子自然是 [Google](https://www.google.com/) 和[百度](https://www.baidu.com/)了。
 
 
-### Goal
+## Goal
 
 今天我将要完成的目标是基于实验室存储于 Mongodb 的代码项目元数据，实现一个能够帮小组成员搜索数据的工具，它能够支持：
 
@@ -58,7 +58,7 @@ tags:
 + 支持关键字的正则匹配
 + 支持条件搜索
 
-### Framework
+## Framework
 
 <div style="text-align:center;margin-bottom:30px;"><img src ="/static/meteor-logo.png" /></div>
 
@@ -76,7 +76,7 @@ in pure JavaScript.
 
 
 
-### Back End
+## Back End
 
 方便起见，我们将把客户端、服务器端的代码放在同一个 javascript 文件中。我们首先获取 Mongodb 中存储元数据的 collection:
 
@@ -181,7 +181,7 @@ function parseSpecial(str){
 至此，后端的所有功能已经全部完成。
 
 
-### Front End
+## Front End
 
 在前端中，我们需要一个模板对数据进行展示：
 

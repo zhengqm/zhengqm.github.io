@@ -9,13 +9,13 @@ tags:
 
 
 
-## 坐标下降是坐标下降
+# 坐标下降是坐标下降
 
 坐标下降法基于的思想是多变量函数F(x1, …, xn)可以通过每次沿一个方向优化来获取最小值，在整个过程中循环使用不同的坐标方向，直至函数收敛。
 
 ![](/static/Coordinate_descent.png)
 
-## 求解[SVM](https://en.wikipedia.org/wiki/Support_vector_machine)对偶形式的[SMO](https://en.wikipedia.org/wiki/Sequential_minimal_optimization)算法是坐标下降
+# 求解[SVM](https://en.wikipedia.org/wiki/Support_vector_machine)对偶形式的[SMO](https://en.wikipedia.org/wiki/Sequential_minimal_optimization)算法是坐标下降
 
 带软间隔的SVM的优化问题最后可写为：
 
@@ -27,7 +27,7 @@ SMO算法给出的解法是每一步选取一对 \\(\alpha_i\\) 和 \\(\alpha_j\
 
 SMO算法的每一步可被视为对 \\(\alpha_i\\)（及 \\(\alpha_j\\) ）完成了一步**坐标下降**。
 
-## [EM算法](https://en.wikipedia.org/wiki/Expectation–maximization_algorithm)是坐标下降
+# [EM算法](https://en.wikipedia.org/wiki/Expectation–maximization_algorithm)是坐标下降
 
 对于存在可观测变量X，隐变量Z，及参数theta的模型，用于求解其参数极大似然估计的EM算法可写为最大化模型的free energy：
 
@@ -40,7 +40,7 @@ $$ F(q,\theta) = -D_{KL}(q||p_{Z|X}(-|x;\theta)) + logL(\theta;x) $$
 + E-Step: \\( q^{(t)} = argmax_q F(q, \theta^{(t)})\\)
 + M-Step: \\( \theta^{(t+1)} = argmax_{\theta}F(q^{(t)}, \theta)\\)
 
-## (Mean Field) [Variational Inference](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)是坐标下降
+# (Mean Field) [Variational Inference](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)是坐标下降
 
 Variational inference 尝试使用一个“简单”的概率分布\\(q(z_{1:m})\\)对后验概率分布\\(p(z_{1:m}\|x)\\)进行近似。这一方法尝试优化的目标是最小化\\(q(z_{1:m})\\)与\\(p(z_{1:m}\|X)\\)间的KL散度，亦等价于最大化模型的[ELBO](https://www.cs.princeton.edu/courses/archive/fall11/.../variational-inference-i.pdf) (evidence lower bound)。
 
@@ -52,7 +52,7 @@ Mean field variational inference采用迭代的方式进行求解。在每一步
 
 Mean field variational inference算法的每一步可被视为对\\(q_k\\)完成了一步**坐标下降**。
 
-## [Gibbs Sampling](https://en.wikipedia.org/wiki/Gibbs_sampling)(勉强)是坐标下降
+# [Gibbs Sampling](https://en.wikipedia.org/wiki/Gibbs_sampling)(勉强)是坐标下降
 
 在Gibbs Sampling中，算法以迭代的方式对联合分布中的每个分量进行采样。对于\\(x_j\\)的第i+1次迭代，算法从以下分布中采样得到新的样本：
 
@@ -66,6 +66,6 @@ $$ x_j \sim p(x_j^{(i+1)} | x_1^{(i+1)}, x_2^{(i+1)}, ..., x_{j-1}^{(i+1)}, x_{j
 这一算法的每次迭代可以视作对目标分布的一次**坐标逼近**。
 
 
-## 到处都是坐标下降
+# 到处都是坐标下降
 
 更广义的坐标下降：当原问题不易解时，将原问题划分为若干个更易解的子问题进行迭代求解，并证明迭代算法会收敛至原问题的解。

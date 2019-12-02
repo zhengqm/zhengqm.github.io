@@ -12,7 +12,7 @@ tags:
 之前一段时间读到了[这篇博客](http://www.redcode.nl/blog/2010/06/creating-shazam-in-java/)，其中描述了作者如何用java实现国外著名音乐搜索工具[shazam](http://www.shazam.com/music/web/home.html)的基本功能。其中所提到的文章又将我引向了[关于shazam的一篇论文](http://www.ee.columbia.edu/~dpwe/papers/Wang03-shazam.pdf)及[另外一篇博客](https://laplacian.wordpress.com/2009/01/10/how-shazam-works/)。读完之后发现其中的原理并不十分复杂，但是方法对噪音的健壮性却非常好，出于好奇决定自己用python自己实现了一个简单的音乐搜索工具—— Song Finder, 它的核心功能被封装在 `SFEngine` 中，第三方依赖方面只使用到了 `scipy`。
 
 
-### 工具demo
+# 工具demo
 
 这个demo在ipython下展示工具的使用，本项目名称为[Song Finder](https://github.com/zhengqm/SongFinder),我把索引、搜索的功能全部封装在[Song Finder](https://github.com/zhengqm/SongFinder)中的`SFEngine`中。首先是简单的准备工作：
 
@@ -69,7 +69,7 @@ original/光良 - 童话 69
 项目主页： [Github](https://github.com/zhengqm/SongFinder)
 
 
-### Song Finder原理
+# Song Finder原理
 
 给定曲库对一个录音片段进行检索是一个不折不扣的搜索问题，但是对音频的搜索并不像对文档、数据的搜索那么直接。为了完成对音乐的搜索，工具需要完成下列3个任务：
 
@@ -77,7 +77,7 @@ original/光良 - 童话 69
 + 以相同的方式对录音片段提取特征
 + 根据录音片段的特征对曲库进行搜索，返回最相似的歌曲及其在歌曲中的位置
 
-### 特征提取？离散傅立叶变换！
+# 特征提取？离散傅立叶变换！
 
 为了对音乐（音频）提取特征，一个很直接的想法是得到音乐的音高的信息，而音高在物理上对应的则又是波的频率信息。为了获取这类信息，一个非常直接的额做法是使用离散傅叶变化对声音进行分析，即使用一个滑动窗口对声音进行采样，对窗口内的数据进行离散傅立叶变化，将时间域上的信息变换为频率域上的信息，使用`scipy`的接口可以很轻松的完成。在这之后我们将频率分段，提取每频率中振幅最大的频率：
 
@@ -118,7 +118,7 @@ def sample(self, filename, start_second, duration = 5, callback = None):
 其中44100为音频文件自身的采样频率，8192是我设定的取样窗口（对，这样hardcode是很不对的），`callback`是一个传入的函数，需要这个参数是因为在不同场景下对于所得到的特征会有不同的后续操作。
 
 
-### 匹配曲库
+# 匹配曲库
 
 在得到歌曲、录音的大量特征后，如何进行高效搜索是一个问题。一个有效的做法是建立一个特殊的哈希表，其中的key是频率，其对应的value是一系列`(曲名,时间)`的tuple，其记录的是某一歌曲在某一时间出现了某一特征频率，但是以频率为key而非以曲名或时间为key。
 
@@ -155,7 +155,7 @@ def sample(self, filename, start_second, duration = 5, callback = None):
 
 对这个列表进行计数，可以看到哪首歌曲的哪个时间点命中的次数最多，并将命中次数最多的`(曲名，时间)`对返回给用户。
 
-### 不足
+# 不足
 
 这个小工具是一个几个小时写成的hack，有许都地方需要改进，例如：
 
@@ -163,6 +163,6 @@ def sample(self, filename, start_second, duration = 5, callback = None):
 + 所有数据都放在内存中，曲库体积增大时需要引入更好的后端存储
 + 索引应该并行化，匹配也应该并行化，匹配的模型其实是典型的map-reduce。
 
-### 项目主页
+# 项目主页
 
 [Github](https://github.com/zhengqm/SongFinder)

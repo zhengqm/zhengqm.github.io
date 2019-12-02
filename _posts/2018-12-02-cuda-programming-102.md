@@ -16,7 +16,7 @@ tags:
 
 Cuda为程序员使用GPU进行异构计算提供了抽象良好的编程模型。但正如同编写CPU程序时需注意局部性、缓存等硬件特性以获得更好地性能，为了更好地挖掘GPU的性能，我们在GPU程序中也需注意GPU特有的访存、执行、数据传输等方面的特性并进行相应的优化。
 
-## GPU的内存层级
+# GPU的内存层级
 
 和存在register、cache、DRAM这样的内存层级的CPU一样，GPU上也有着速度、大小各异的存储层级，由快至慢分别是：
 
@@ -64,7 +64,7 @@ multiply_with_shared(float* A, float* x, float* y, int N, int M) {
 在我的机器上，当设M=256，N=1000000时，`multiply_with_shared`相比于`multiply_without_shared`提供了4x的提速比。
 
 
-## GPU的分支语句对性能的影响
+# GPU的分支语句对性能的影响
 
 对于一个thread block中的各个thread，每32个thread组成一个warp，SM以warp为单位进行调度。在一个warp中，所有thread执行同一个指令流，即Single Instruction Multiple Thread(SIMT)。如果执行过程中有分支语句，那么执行不同分支的thread需要互相等待。比方说对于下列语句：
 
@@ -90,7 +90,7 @@ switch (threadIdx.x) {
 答案是1/128？不对，应该是1/32，因为warp的组成是32个thread，这样的分支最多导致32叉的分叉。
 
 
-## GPU访存pattern对性能的影响
+# GPU访存pattern对性能的影响
 
 
 如前文所提到的，一个warp中的32个thread同时执行同一条instruction。当这32个thread同时执行一条内存读取指令时，GPU将发起一个或多个memory transaction。若这32个thread读取的是一段连续的内存，GPU将有机会在一个memory transaction中满足多个thread中的内存读取请求，从而减少memory transaction的数量且提高内存带宽的有效使用率。这种在连续thread中读取连续内存空间以提高内存带宽使用率的访存优化被称为memory coalescing。
@@ -115,7 +115,7 @@ add_striped(float* A, float* B, float* C, int N) {
 ```
 在我的机器上，当设N=60M时，`add_coalesced`的执行速度是`add_striped`的3.5倍。
 
-## CPU、GPU间数据传输，PCIe，page-lock内存
+# CPU、GPU间数据传输，PCIe，page-lock内存
 
 CPU、GPU间的数据传输通过PCIe进行传输，目前服务器上常见的16x接口的理论带宽上限是16GB/s。CPU、GPU之间的所有数据传输均通过DMA完成，这就要求CPU侧的内存必须是page-lock的，而通常情况下我们向系统申请得到的内存均是pageable的，这就导致了当我们调用`cudaMemcpy`从CPU向GPU传输数据时，`cudaMemcpy`将执行以下判断：
 
@@ -135,11 +135,11 @@ CPU、GPU间的数据传输通过PCIe进行传输，目前服务器上常见的1
 + 如果使用了`cudaMallocHost`，尽可能重复使用以降低平均分配成本
 
 
-## 总结
+# 总结
 
 本文讨论了影响GPU程序执行性能的几个话题，涉及访存、执行、数据传输等多个方面，这些话题存在的原因来自于GPU、CPU架构之间的显著不同。尽管Cuda提供了抽象良好的编程模型，为了更好地挖掘GPU的性能，我们在编码时需要将GPU的架构纳入考虑并对上述话题进行留意。
 
-## 引用
+# 引用
 
 + [Cuda Memory Allocation Overhead](https://www.cs.virginia.edu/~mwb7w/cuda_support/memory_management_overhead.html)
 

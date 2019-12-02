@@ -17,7 +17,7 @@ tags:
 
 实际上这三个选项并不复杂，在了解nvcc的两阶段编译过程后这三个编译选项的关系将变得十分好理解。本文将首先介绍nvcc的编译过程，并在此基础上分别介绍这三个编译选项的含义。
 
-## nvcc的编译过程
+# nvcc的编译过程
 
 nvcc采用了一种两阶段编译过程，cuda代码首先被编译为一种面向虚拟架构(virtual architecture)的ptx代码，即图中的stage1；然后在第二阶段中将ptx代码面向具体的实际架构(real architecture)编译为实际可执行的二进制代码，即图中的stage2。
 
@@ -27,7 +27,7 @@ nvcc采用了一种两阶段编译过程，cuda代码首先被编译为一种面
 
 在运行时，若二进制代码可直接运行在所在显卡上，则直接运行二进制代码；否则，若文件中包含虚拟架构代码，显卡驱动会尝试将虚拟架构代码在编译时动态编译为二进制代码进行执行。
 
-## `-arch`选项
+# `-arch`选项
 
 `-arch`选项用于向nvcc指定在第一阶段中使用什么虚拟架构，可用的选项包括：
 + compute_30, compute_32
@@ -38,7 +38,7 @@ nvcc采用了一种两阶段编译过程，cuda代码首先被编译为一种面
 + compute_75
 + ...
 
-## `-code`选项
+# `-code`选项
 
 `-code`选项用于向nvcc将什么代码放入最后的目标文件中。
 
@@ -53,7 +53,7 @@ nvcc采用了一种两阶段编译过程，cuda代码首先被编译为一种面
 
 也可用于指定面向哪种虚拟架构优化ptx代码并放入目标文件中，可用的选项同`-arch`。
 
-## `-arch`配合`-code`
+# `-arch`配合`-code`
 
 `-arch`和`-code`选项的组合可以指定nvcc在编译过程中使用的虚拟架构，以及目标文件中包含哪些虚拟架构代码及实际架构代码，比方说：
 
@@ -67,7 +67,7 @@ nvcc将以`compute_20`为虚拟架构产生ptx代码，所产生的目标文件�
 ```
 nvcc将以`compute_20`为虚拟架构产生ptx代码，将包含面向`compute_20`虚拟架构的ptx代码及面向`sm_20`、`sm_21`实际架构的二进制代码。
 
-## `-gencode`选项
+# `-gencode`选项
 
 在使用`-arch`和`-code`时，我们能够指定不同的实际架构，但是只能指定一种虚拟架构。有时候我们希望nvcc在编译过程中使用不同的虚拟架构，并在目标文件中包含面向多种虚拟架构的ptx代码，以及面向多种实际架构的二进制代码，此时我们可以使用`-gencode`达成这一目标，比方说
 
@@ -87,6 +87,6 @@ nvcc将以`compute_20`为虚拟架构产生ptx代码，将包含面向`compute_2
 + `compute_61`ptx代码
 
 
-## 引用
+# 引用
 + [NVIDIA CUDA Compiler Driver NVCC](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html)
 + [How to specify architecture to compile CUDA code](https://codeyarns.com/2014/03/03/how-to-specify-architecture-to-compile-cuda-code/)
